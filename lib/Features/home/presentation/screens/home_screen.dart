@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:prayer_silence_time_app/Features/home/presentation/widget/prayer_card.dart';
 import 'package:prayer_silence_time_app/core/constants/images.dart';
 import 'package:prayer_silence_time_app/core/widgets/app_switch.dart';
-import 'package:prayer_silence_time_app/core/widgets/prayer_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
