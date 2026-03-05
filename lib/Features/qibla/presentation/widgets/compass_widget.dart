@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:prayer_silence_time_app/core/constants/images.dart';
 import 'package:prayer_silence_time_app/core/constants/theme_data.dart';
 import 'dart:math' as math;
 
