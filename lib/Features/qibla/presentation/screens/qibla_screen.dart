@@ -3,11 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:prayer_silence_time_app/core/constants/theme_data.dart';
 import 'package:prayer_silence_time_app/features/qibla/presentation/cubit/qibla_cubit.dart';
 import 'package:prayer_silence_time_app/features/qibla/presentation/widgets/location_error_widget.dart';
+import 'package:prayer_silence_time_app/features/qibla/presentation/widgets/compass_widget.dart';
 
 class QiblaScreen extends StatelessWidget {
   const QiblaScreen({super.key});
@@ -135,7 +134,7 @@ class QiblahCompassWidget extends StatelessWidget {
       stream: FlutterQiblah.qiblahStream,
       builder: (_, AsyncSnapshot<QiblahDirection> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return _buildShimmerLoading();
+          return const Center(child: CupertinoActivityIndicator());
         }
 
         if (snapshot.hasError) {
@@ -147,46 +146,25 @@ class QiblahCompassWidget extends StatelessWidget {
         }
 
         final qiblahDirection = snapshot.data!;
-        // Exact logic from example:
-        var angle = ((qiblahDirection.qiblah) * (pi / 180) * -1);
 
-        // Calculate if aligned (threshold like the example or standard 5 deg)
-        // Note: qiblahDirection.qiblah is already the offset from device north to Mecca.
-        bool isFound = qiblahDirection.qiblah.abs() <= 5.0;
+        // Normalize the angle to [-180, 180] for accurate distance check
+        double relativeAngle = qiblahDirection.qiblah;
+        while (relativeAngle > 180) relativeAngle -= 360;
+        while (relativeAngle < -180) relativeAngle += 360;
+
+        // Threshold set to 14.0 as requested
+        final bool isFound = relativeAngle.abs() <= 14.0;
 
         return Column(
           children: [
             const Spacer(flex: 1),
-            Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Transform.rotate(
-                  angle: angle,
-                  child: SvgPicture.asset(
-                    'assest/icons/5.svg', // Compass dial
-                    width: 280,
-                    colorFilter: const ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ),
-                SvgPicture.asset(
-                  'assest/icons/4.svg', // Kaaba logo
-                  width: 250,
-                ),
-                SvgPicture.asset(
-                  'assest/icons/3.svg', // Needle pointer (static top)
-                  width: 290,
-                  colorFilter: ColorFilter.mode(
-                    isFound ? AppColors.activeGreen : Colors.white70,
-                    BlendMode.srcIn,
-                  ),
-                ),
-              ],
+            CompassWidget(
+              currentHeading: qiblahDirection.direction,
+              qiblaDirection: qiblahDirection.offset,
+              isQiblaFound: isFound,
             ),
             const Spacer(flex: 2),
-            _buildStatusCard(qiblahDirection),
+            _buildStatusCard(qiblahDirection, isFound),
             const SizedBox(height: 24),
             _buildInstructions(),
             const Spacer(flex: 1),
@@ -196,28 +174,11 @@ class QiblahCompassWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildShimmerLoading() {
-    return Shimmer.fromColors(
-      baseColor: Colors.white.withOpacity(0.05),
-      highlightColor: Colors.white.withOpacity(0.1),
-      child: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          SvgPicture.asset('assest/icons/5.svg', width: 280),
-          SvgPicture.asset('assest/icons/4.svg', width: 250),
-          SvgPicture.asset('assest/icons/3.svg', width: 290),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatusCard(QiblahDirection qiblahDirection) {
+  Widget _buildStatusCard(QiblahDirection qiblahDirection, bool isFound) {
     double relativeAngle = qiblahDirection.qiblah;
     // Normalize to [-180, 180]
     while (relativeAngle > 180) relativeAngle -= 360;
     while (relativeAngle < -180) relativeAngle += 360;
-
-    final bool isFound = relativeAngle.abs() <= 14.0;
 
     String text;
     IconData icon;
