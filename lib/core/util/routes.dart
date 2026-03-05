@@ -5,7 +5,7 @@
 library;
 
 import 'package:get/get.dart';
-import 'package:prayer_silence_time_app/Features/main_navigation/presentation/screens/main_screen.dart';
+import 'package:prayer_silence_time_app/features/main_navigation/presentation/screens/main_screen.dart';
 import 'package:prayer_silence_time_app/core/constants/route.dart';
 import 'package:prayer_silence_time_app/core/middleware/onboarding_middleware.dart';
 import 'package:prayer_silence_time_app/features/onboarding/presentation/screens/onboarding_screen.dart';

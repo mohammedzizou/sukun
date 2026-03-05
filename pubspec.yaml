@@ -53,6 +53,7 @@ dependencies:
   shimmer: ^3.0.0
   dynamic_color: ^1.7.0
   path: ^1.9.1
+  adhan_dart: ^1.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,8 +1,13 @@
-
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:prayer_silence_time_app/features/home/data/datasources/home_local_calculation_data_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../features/home/data/datasources/home_local_data_source.dart';
+import '../../features/home/data/repositories/prayer_repository_impl.dart';
+import '../../features/home/domain/repositories/prayer_repository.dart';
+import '../../features/home/domain/usecases/get_prayer_times_usecase.dart';
+import '../../features/home/presentation/cubit/home_cubit.dart';
 import '../local_data/shared_preferences.dart';
 import '../networking/base_repository.dart';
 import '../networking/network_info.dart';
@@ -10,7 +15,6 @@ import '../networking/network_info.dart';
 GetIt getIt = GetIt.instance;
 
 Future initApp() async {
-
   // Get shared preferences instance
   final SharedPreferences sharedPreferences =
       await SharedPreferences.getInstance();
@@ -21,16 +25,48 @@ Future initApp() async {
 
   // Register AppPreferences class as a lazy singleton class
   getIt.registerLazySingleton<AppPreferences>(
-      () => AppPreferences(sharedPreferences));
+    () => AppPreferences(sharedPreferences),
+  );
 
   // Register network info class as a lazy singleton class
   getIt.registerLazySingleton<NetworkInfo>(
-      () => NetworkInfoImpl(connectionChecker));
+    () => NetworkInfoImpl(connectionChecker),
+  );
 
   // Register BaseRepository class as a lazy singleton class
-  getIt.registerLazySingleton<BaseRepository>(() => BaseRepository(
+  getIt.registerLazySingleton<BaseRepository>(
+    () => BaseRepository(
       networkInfo: getIt<NetworkInfo>(),
-      appPreferences: getIt<AppPreferences>()..init()));
+      appPreferences: getIt<AppPreferences>()..init(),
+    ),
+  );
 
- 
+  // --- Home Feature ---
+
+  // Data sources
+  getIt.registerLazySingleton<HomeLocalCalculationDataSource>(
+    () => HomeLocalCalculationDataSourceImpl(),
+  );
+  getIt.registerLazySingleton<HomeLocalDataSource>(
+    () => HomeLocalDataSourceImpl(sharedPreferences: sharedPreferences),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<PrayerRepository>(
+    () => PrayerRepositoryImpl(
+      calculationDataSource: getIt<HomeLocalCalculationDataSource>(),
+      localDataSource: getIt<HomeLocalDataSource>(),
+      networkInfo: getIt<NetworkInfo>(),
+    ),
+  );
+
+  // Use Case
+  getIt.registerLazySingleton<GetPrayerTimesUseCase>(
+    () => GetPrayerTimesUseCase(getIt<PrayerRepository>()),
+  );
+
+  // Cubit
+  getIt.registerFactory<HomeCubit>(
+    () => HomeCubit(getIt<GetPrayerTimesUseCase>()),
+  );
 }
