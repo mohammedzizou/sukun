@@ -7,6 +7,7 @@ import 'package:prayer_silence_time_app/core/constants/theme_data.dart';
 import 'package:prayer_silence_time_app/features/main_navigation/presentation/cubit/main_navigation_cubit.dart';
 import 'package:prayer_silence_time_app/features/main_navigation/presentation/cubit/main_navigation_state.dart';
 import 'package:prayer_silence_time_app/features/home/presentation/screens/home_screen.dart';
+import 'package:prayer_silence_time_app/features/schedule/presentation/screens/schedule_screen.dart';
 
 // Placeholder screens for now
 class PlaceholderScreen extends StatelessWidget {
@@ -33,18 +34,16 @@ class MainScreen extends StatelessWidget {
       create: (context) => MainNavigationCubit(),
       child: BlocBuilder<MainNavigationCubit, MainNavigationState>(
         builder: (context, state) {
+          final List<Widget> pages = [
+            const HomeScreen(),
+            const ScheduleScreen(),
+            const PlaceholderScreen(title: 'Qibla'),
+            const PlaceholderScreen(title: 'Settings'),
+            const PlaceholderScreen(title: 'Profile'),
+          ];
           return Scaffold(
             body: AppBackground(
-              child: IndexedStack(
-                index: state.selectedIndex,
-                children: const [
-                  HomeScreen(),
-                  PlaceholderScreen(title: 'Schedule'),
-                  PlaceholderScreen(title: 'Qibla'),
-                  PlaceholderScreen(title: 'Settings'),
-                  PlaceholderScreen(title: 'Profile'),
-                ],
-              ),
+              child: IndexedStack(index: state.selectedIndex, children: pages),
             ),
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: state.selectedIndex,
