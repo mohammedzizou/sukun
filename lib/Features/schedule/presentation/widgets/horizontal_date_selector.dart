@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:prayer_silence_time_app/core/constants/theme_data.dart';
 import 'package:intl/intl.dart';
 
 class HorizontalDateSelector extends StatelessWidget {
