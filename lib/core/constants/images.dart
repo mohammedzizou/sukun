@@ -19,4 +19,8 @@ class AppIcons {
   static const String qibla = '$basePath/qibla_icon.svg';
   static const String settingsActive = '$basePath/settings_active_icon.svg';
   static const String settings = '$basePath/settings_icon.svg';
+
+  // Onboarding
+  static const String mosque = '$basePath/mosk.svg';
+  static const String motionDiv = '$basePath/motion_div.svg';
 }

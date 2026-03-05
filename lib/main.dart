@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:prayer_silence_time_app/features/main_navigation/presentation/screens/main_screen.dart';
+import 'package:prayer_silence_time_app/core/constants/route.dart';
+import 'package:prayer_silence_time_app/core/di/dipendency_injection.dart';
+import 'package:prayer_silence_time_app/core/util/routes.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initApp();
   runApp(const MyApp());
 }
 
@@ -11,7 +16,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Salah Silent',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -26,7 +31,8 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MainScreen(),
+      initialRoute: AppRoute.onboarding,
+      getPages: routes,
     );
   }
 }

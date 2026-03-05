@@ -7,6 +7,7 @@ class AppPreferencesKeys {
   static const String accessToken = 'accessToken';
   static const String tokenType = 'tokenType';
   static const String expiresIn = 'expiresIn';
+  static const String hasSeenOnboarding = 'hasSeenOnboarding';
 }
 
 abstract class AppPreferencesInputs {
@@ -54,5 +55,14 @@ class AppPreferences implements AppPreferencesInputs, AppPreferencesOutputs {
   @override
   Future<void> deleteToken() {
     return sharedPreferences.remove(AppPreferencesKeys.accessToken);
+  }
+
+  bool getHasSeenOnboarding() {
+    return sharedPreferences.getBool(AppPreferencesKeys.hasSeenOnboarding) ??
+        false;
+  }
+
+  Future<void> setHasSeenOnboarding() async {
+    await sharedPreferences.setBool(AppPreferencesKeys.hasSeenOnboarding, true);
   }
 }
