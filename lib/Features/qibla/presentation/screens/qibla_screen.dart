@@ -186,7 +186,7 @@ class QiblahCompassWidget extends StatelessWidget {
               ],
             ),
             const Spacer(flex: 2),
-            _buildStatusCard(isFound, qiblahDirection.direction),
+            _buildStatusCard(qiblahDirection),
             const SizedBox(height: 24),
             _buildInstructions(),
             const Spacer(flex: 1),
@@ -204,14 +204,36 @@ class QiblahCompassWidget extends StatelessWidget {
         alignment: Alignment.center,
         children: <Widget>[
           SvgPicture.asset('assest/icons/5.svg', width: 280),
-          SvgPicture.asset('assest/icons/4.svg', width: 80),
-          SvgPicture.asset('assest/icons/3.svg', width: 35),
+          SvgPicture.asset('assest/icons/4.svg', width: 250),
+          SvgPicture.asset('assest/icons/3.svg', width: 290),
         ],
       ),
     );
   }
 
-  Widget _buildStatusCard(bool isFound, double heading) {
+  Widget _buildStatusCard(QiblahDirection qiblahDirection) {
+    double relativeAngle = qiblahDirection.qiblah;
+    // Normalize to [-180, 180]
+    while (relativeAngle > 180) relativeAngle -= 360;
+    while (relativeAngle < -180) relativeAngle += 360;
+
+    final bool isFound = relativeAngle.abs() <= 14.0;
+
+    String text;
+    IconData icon;
+    if (isFound) {
+      text = "You are now facing Mecca";
+      icon = Icons.check_circle;
+    } else if (relativeAngle > 0) {
+      text =
+          "Rotate the phone ${relativeAngle.abs().toStringAsFixed(0)}° to the right";
+      icon = Icons.screen_rotation;
+    } else {
+      text =
+          "Rotate the phone ${relativeAngle.abs().toStringAsFixed(0)}° to the left";
+      icon = Icons.screen_rotation;
+    }
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 24),
@@ -230,34 +252,23 @@ class QiblahCompassWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
       ),
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.near_me,
-                size: 18,
-                color: isFound ? AppColors.activeGreen : Colors.white,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                isFound ? 'Qibla Found' : 'Finding Qibla...',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
+          Icon(
+            icon,
+            size: 24,
+            color: isFound ? AppColors.activeGreen : Colors.white,
           ),
-          const SizedBox(height: 8),
-          Text(
-            '${heading.toStringAsFixed(0)}° / Align both arrow heads',
-            style: const TextStyle(
-              color: AppColors.activeGreen12,
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
+          const SizedBox(width: 12),
+          Flexible(
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
