@@ -10,6 +10,7 @@ import 'package:prayer_silence_time_app/features/home/presentation/screens/home_
 import 'package:prayer_silence_time_app/features/schedule/presentation/screens/schedule_screen.dart';
 import 'package:prayer_silence_time_app/features/qibla/presentation/screens/qibla_screen.dart';
 import 'package:prayer_silence_time_app/features/settings/presentation/screens/settings_screen.dart';
+import 'package:prayer_silence_time_app/features/profile/presentation/screens/profile_screen.dart';
 
 // Placeholder screens for now
 class PlaceholderScreen extends StatelessWidget {
@@ -41,7 +42,7 @@ class MainScreen extends StatelessWidget {
             const ScheduleScreen(),
             const QiblaScreen(),
             const SettingsScreen(),
-            const PlaceholderScreen(title: 'Profile'),
+            const ProfileScreen(),
           ];
           return Scaffold(
             body: AppBackground(
