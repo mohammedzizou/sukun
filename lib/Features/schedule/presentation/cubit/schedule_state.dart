@@ -11,7 +11,7 @@ abstract class ScheduleState extends Equatable {
 }
 
 class ScheduleInitial extends ScheduleState {
-  ScheduleInitial({required super.selectedDate});
+  const ScheduleInitial({required super.selectedDate});
 }
 
 class ScheduleLoading extends ScheduleState {

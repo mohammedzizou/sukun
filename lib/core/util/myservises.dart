@@ -14,12 +14,6 @@ class MyServices extends GetxService {
   late SharedPreferences sharedPreferences;
   //final BaseRepository _baseRepository = getIt<BaseRepository>();
   Map<String, dynamic> myMap = {};
-  @override
-  void onInit() async {
-    super.onInit();
-  }
-
- 
 
   Future<MyServices> init() async {
     sharedPreferences = await SharedPreferences.getInstance();

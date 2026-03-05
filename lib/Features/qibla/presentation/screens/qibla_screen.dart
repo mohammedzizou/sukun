@@ -1,4 +1,5 @@
-import 'dart:math' show pi;
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -149,8 +150,12 @@ class QiblahCompassWidget extends StatelessWidget {
 
         // Normalize the angle to [-180, 180] for accurate distance check
         double relativeAngle = qiblahDirection.qiblah;
-        while (relativeAngle > 180) relativeAngle -= 360;
-        while (relativeAngle < -180) relativeAngle += 360;
+        while (relativeAngle > 180) {
+          relativeAngle -= 360;
+        }
+        while (relativeAngle < -180) {
+          relativeAngle += 360;
+        }
 
         // Threshold set to 14.0 as requested
         final bool isFound = relativeAngle.abs() <= 14.0;
@@ -177,8 +182,12 @@ class QiblahCompassWidget extends StatelessWidget {
   Widget _buildStatusCard(QiblahDirection qiblahDirection, bool isFound) {
     double relativeAngle = qiblahDirection.qiblah;
     // Normalize to [-180, 180]
-    while (relativeAngle > 180) relativeAngle -= 360;
-    while (relativeAngle < -180) relativeAngle += 360;
+    while (relativeAngle > 180) {
+      relativeAngle -= 360;
+    }
+    while (relativeAngle < -180) {
+      relativeAngle += 360;
+    }
 
     String text;
     IconData icon;

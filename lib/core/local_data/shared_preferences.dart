@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, strict_top_level_inference
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +27,9 @@ class AppPreferences implements AppPreferencesInputs, AppPreferencesOutputs {
   @override
   Future<void> saveToken(String accessToken) async {
     await sharedPreferences.setString(
-        AppPreferencesKeys.accessToken, "Token $accessToken");
+      AppPreferencesKeys.accessToken,
+      "Token $accessToken",
+    );
   }
 
   void init() {

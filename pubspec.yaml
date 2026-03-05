@@ -52,6 +52,7 @@ dependencies:
   geolocator: ^14.0.2
   shimmer: ^3.0.0
   dynamic_color: ^1.7.0
+  path: ^1.9.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

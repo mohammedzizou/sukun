@@ -11,7 +11,7 @@ library;
 import 'package:get/get.dart';
 
 bool validCardNumber(String cardNumber) {
-  // Remove any non-digit characters from the card number 
+  // Remove any non-digit characters from the card number
   cardNumber = cardNumber.replaceAll(RegExp(r'\D'), '');
 
   // Check if the card number is empty or less than 13 digits
@@ -42,7 +42,7 @@ bool validCardNumber(String cardNumber) {
   return sum % 10 == 0;
 }
 
-validInput(String val, int min, int max, String type) {
+String? validInput(String val, int min, int max, String type) {
   if (type == "username") {
     if (!GetUtils.isUsername(val)) {
       return "337".tr;
@@ -108,4 +108,5 @@ validInput(String val, int min, int max, String type) {
   if (val.length > max) {
     return "${"345".tr} $max";
   }
+  return null;
 }
