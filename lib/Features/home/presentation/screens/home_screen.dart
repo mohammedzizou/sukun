@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:prayer_silence_time_app/Features/home/presentation/widget/prayer_card.dart';
 import 'package:prayer_silence_time_app/core/constants/images.dart';
+import 'package:prayer_silence_time_app/core/constants/theme_data.dart';
 import 'package:prayer_silence_time_app/core/widgets/app_switch.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -86,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         const Text(
           'Good Night',
-          style: TextStyle(color: Color(0x99A3F7BF), fontSize: 12),
+          style: TextStyle(color: AppColors.mint60, fontSize: 12),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,9 +104,9 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 42,
               height: 42,
               decoration: ShapeDecoration(
-                color: const Color(0x1E2ECC71),
+                color: AppColors.activeGreen12,
                 shape: RoundedRectangleBorder(
-                  side: BorderSide(width: 0.52, color: const Color(0x332ECC71)),
+                  side: BorderSide(width: 0.52, color: AppColors.activeGreen20),
                   borderRadius: BorderRadius.circular(21),
                 ),
               ),
@@ -131,14 +132,14 @@ class _HomeScreenState extends State<HomeScreen> {
               AppIcons.mapPin,
               width: 14,
               colorFilter: const ColorFilter.mode(
-                Color(0xFF8B9A93),
+                AppColors.textGrey,
                 BlendMode.srcIn,
               ),
             ),
             const SizedBox(width: 4),
             const Text(
               'Mecca, Saudi Arabia - Wednesday, March 4',
-              style: TextStyle(color: Color(0x7FA3F7BF), fontSize: 12),
+              style: TextStyle(color: AppColors.mint50, fontSize: 12),
             ),
           ],
         ),
@@ -160,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 center: Alignment(0.50, 0.50),
                 radius: 0.71,
                 colors: [
-                  const Color(0x262ECC71),
+                  AppColors.activeGreen15,
                   Colors.black.withValues(alpha: 0),
                 ],
               ),
@@ -179,10 +180,10 @@ class _HomeScreenState extends State<HomeScreen> {
             gradient: LinearGradient(
               begin: Alignment(0.00, 0.00),
               end: Alignment(1.00, 1.00),
-              colors: [const Color(0x2D2ECC71), const Color(0xCC0B2E22)],
+              colors: [AppColors.activeGreen18, AppColors.surfaceGradientDark],
             ),
             shape: RoundedRectangleBorder(
-              side: BorderSide(width: 0.52, color: const Color(0x472ECC71)),
+              side: BorderSide(width: 0.52, color: AppColors.activeGreen28),
               borderRadius: BorderRadius.circular(24),
             ),
           ),
@@ -196,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     'NEXT PRAYER',
                     style: TextStyle(
-                      color: Color(0xA5A3F7BF),
+                      color: AppColors.mint65,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1,
@@ -204,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Text(
                     'Prayer time',
-                    style: TextStyle(color: Color(0xA5A3F7BF), fontSize: 10),
+                    style: TextStyle(color: AppColors.mint65, fontSize: 10),
                   ),
                 ],
               ),
@@ -223,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     '5:12 AM',
                     style: TextStyle(
-                      color: Color(0xFFA3F7BF),
+                      color: AppColors.mint100,
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                     ),
@@ -235,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     'الفجر',
                     style: TextStyle(
-                      color: const Color(0x7FA3F7BF),
+                      color: AppColors.mint50,
                       fontSize: 15,
                       fontFamily: 'Noto Naskh Arabic',
                       fontWeight: FontWeight.w400,
@@ -264,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         const Text(
                           'TIME REMAINING',
                           style: TextStyle(
-                            color: Color(0xFF8B9A93),
+                            color: AppColors.textGrey,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1,
@@ -285,7 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: const BoxDecoration(
-                        color: Color(0xFF153B2D),
+                        color: AppColors.surfaceDark,
                         shape: BoxShape.circle,
                       ),
                       child: SvgPicture.asset(
@@ -293,7 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: 20,
                         height: 20,
                         colorFilter: const ColorFilter.mode(
-                          Color(0xFF4CAF50),
+                          AppColors.primaryGreen,
                           BlendMode.srcIn,
                         ),
                       ),
@@ -351,9 +352,9 @@ class _HomeScreenState extends State<HomeScreen> {
       height: 95.02,
       padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: ShapeDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color: AppColors.white.withValues(alpha: 0.05),
         shape: RoundedRectangleBorder(
-          side: BorderSide(width: 0.52, color: const Color(0x19A3F7BF)),
+          side: BorderSide(width: 0.52, color: AppColors.mint10),
           borderRadius: BorderRadius.circular(20),
         ),
       ),
@@ -362,14 +363,14 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: const Color(0xFF153B2D),
+              color: AppColors.surfaceDark,
               borderRadius: BorderRadius.circular(12),
             ),
             child: SvgPicture.asset(
               AppIcons.bellOff,
               width: 20,
               height: 20,
-              color: Color(0xFF2ECC71),
+              color: AppColors.activeGreen,
             ),
           ),
           const SizedBox(width: 16),
@@ -389,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 2),
                 Text(
                   'Tap to enable automatic silencing',
-                  style: TextStyle(color: Color(0x7FA3F7BF), fontSize: 12),
+                  style: TextStyle(color: AppColors.mint50, fontSize: 12),
                 ),
               ],
             ),
@@ -405,9 +406,9 @@ class _HomeScreenState extends State<HomeScreen> {
       height: 90.54,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: ShapeDecoration(
-        color: const Color(0x0FFFC150),
+        color: AppColors.gold05,
         shape: RoundedRectangleBorder(
-          side: BorderSide(width: 0.52, color: const Color(0x2DFFC150)),
+          side: BorderSide(width: 0.52, color: AppColors.gold18),
           borderRadius: BorderRadius.circular(16),
         ),
       ),
@@ -417,14 +418,14 @@ class _HomeScreenState extends State<HomeScreen> {
             width: 36,
             height: 36,
             decoration: ShapeDecoration(
-              color: const Color(0x1EFFC150),
+              color: AppColors.gold12,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
             child: const Icon(
               Icons.shield_outlined,
-              color: Color(0xccFFC150), // yellow/gold
+              color: AppColors.gold80, // yellow/gold
               size: 20,
             ),
           ),
@@ -437,7 +438,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   'Permission Required',
                   style: TextStyle(
-                    color: Color(0xE5FFDC82),
+                    color: AppColors.goldLight,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -445,7 +446,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 2),
                 Text(
                   'Grant Do Not Disturb access to enable auto-silent',
-                  style: TextStyle(color: Color(0x99FFC150), fontSize: 12),
+                  style: TextStyle(color: AppColors.gold60, fontSize: 12),
                 ),
               ],
             ),
@@ -455,9 +456,9 @@ class _HomeScreenState extends State<HomeScreen> {
             width: 64.25,
             height: 31.03,
             decoration: ShapeDecoration(
-              color: const Color(0x26FFC150),
+              color: AppColors.gold15,
               shape: RoundedRectangleBorder(
-                side: BorderSide(width: 0.52, color: const Color(0x3FFFC150)),
+                side: BorderSide(width: 0.52, color: AppColors.gold25),
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
@@ -465,7 +466,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Text(
                 'Enable',
                 style: TextStyle(
-                  color: Color(0xE5FFDC82),
+                  color: AppColors.goldLight,
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
                 ),

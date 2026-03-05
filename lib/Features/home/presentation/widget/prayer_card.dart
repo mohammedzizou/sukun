@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:prayer_silence_time_app/core/constants/images.dart';
+import 'package:prayer_silence_time_app/core/constants/theme_data.dart';
 
 class PrayerCard extends StatelessWidget {
   final String englishName;
@@ -28,11 +29,11 @@ class PrayerCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: isNext
-            ? Color(0x1E2ECC71)
+            ? AppColors.activeGreen12
             : Colors.white.withValues(alpha: 0.04),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: !isNext ? Color(0x11A3F7BF) : const Color(0x4C2ECC71),
+          color: !isNext ? AppColors.mint07 : AppColors.activeGreen30,
           width: 0.52,
         ),
       ),
@@ -43,8 +44,8 @@ class PrayerCard extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: isNext
-                  ? Color(0x332ECC71)
-                  : const Color(0xFF153B2D), // Slightly lighter green box
+                  ? AppColors.activeGreen20
+                  : AppColors.surfaceDark, // Slightly lighter green box
               borderRadius: BorderRadius.circular(12),
             ),
             child: SvgPicture.asset(
@@ -52,7 +53,9 @@ class PrayerCard extends StatelessWidget {
               width: 20,
               height: 20,
               colorFilter: ColorFilter.mode(
-                isNext ? Color(0xff2ECC71) : Color(0x72A3F7BF), // Emerald Green
+                isNext
+                    ? AppColors.activeGreen
+                    : AppColors.mint45, // Emerald Green
                 BlendMode.srcIn,
               ),
             ),
@@ -76,7 +79,7 @@ class PrayerCard extends StatelessWidget {
                 Text(
                   time,
                   style: const TextStyle(
-                    color: Color(0x72A3F7BF), // Grey/Green text
+                    color: AppColors.mint45, // Grey/Green text
                     fontSize: 12,
                   ),
                 ),
@@ -90,14 +93,14 @@ class PrayerCard extends StatelessWidget {
               height: 18.99,
 
               decoration: BoxDecoration(
-                color: const Color(0x262ECC71),
+                color: AppColors.activeGreen15,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Center(
                 child: const Text(
                   'NEXT',
                   style: TextStyle(
-                    color: Color(0xFF2ECC71),
+                    color: AppColors.activeGreen,
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.5,
@@ -118,9 +121,9 @@ class PrayerCard extends StatelessWidget {
                 colorFilter: ColorFilter.mode(
                   isSilent
                       ? isNext
-                            ? Color(0xFF2ECC71)
-                            : const Color(0x72A3F7BF)
-                      : const Color(0xFF4CAF50),
+                            ? AppColors.activeGreen
+                            : AppColors.mint45
+                      : AppColors.primaryGreen,
                   BlendMode.srcIn,
                 ),
               ),

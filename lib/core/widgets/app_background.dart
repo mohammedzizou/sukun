@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prayer_silence_time_app/core/constants/theme_data.dart';
 
 class AppBackground extends StatelessWidget {
   final Widget child;
@@ -12,10 +13,7 @@ class AppBackground extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF0F2E23), // Deep Emerald Green
-            Color(0xFF04140E), // Nearly Black Green
-          ],
+          colors: [AppColors.backgroundTop, AppColors.backgroundBottom],
         ),
       ),
       child: child,
