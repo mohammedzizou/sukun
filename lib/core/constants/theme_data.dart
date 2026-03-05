@@ -22,6 +22,7 @@ class AppColors {
   // Mint / Light Green Tint (A3F7BF) Opacities
   static const Color mint07 = Color(0x11A3F7BF);
   static const Color mint10 = Color(0x19A3F7BF);
+  static const Color mint15 = Color(0x26A3F7BF);
   static const Color mint35 = Color(0x59A3F7BF);
   static const Color mint45 = Color(0x72A3F7BF);
   static const Color mint50 = Color(0x7FA3F7BF);

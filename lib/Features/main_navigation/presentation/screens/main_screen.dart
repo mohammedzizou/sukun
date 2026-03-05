@@ -8,6 +8,7 @@ import 'package:prayer_silence_time_app/features/main_navigation/presentation/cu
 import 'package:prayer_silence_time_app/features/main_navigation/presentation/cubit/main_navigation_state.dart';
 import 'package:prayer_silence_time_app/features/home/presentation/screens/home_screen.dart';
 import 'package:prayer_silence_time_app/features/schedule/presentation/screens/schedule_screen.dart';
+import 'package:prayer_silence_time_app/features/qibla/presentation/screens/qibla_screen.dart';
 
 // Placeholder screens for now
 class PlaceholderScreen extends StatelessWidget {
@@ -37,7 +38,7 @@ class MainScreen extends StatelessWidget {
           final List<Widget> pages = [
             const HomeScreen(),
             const ScheduleScreen(),
-            const PlaceholderScreen(title: 'Qibla'),
+            const QiblaScreen(),
             const PlaceholderScreen(title: 'Settings'),
             const PlaceholderScreen(title: 'Profile'),
           ];
