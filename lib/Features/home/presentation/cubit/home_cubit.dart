@@ -2,13 +2,14 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:prayer_silence_time_app/core/local_data/shared_preferences.dart';
 import 'package:prayer_silence_time_app/core/models/app_location.dart';
 import 'package:prayer_silence_time_app/core/services/background_alarm_service.dart';
 import 'package:prayer_silence_time_app/core/services/location_service.dart';
 import 'package:prayer_silence_time_app/core/services/silence_service.dart';
 import 'package:prayer_silence_time_app/features/home/domain/entities/prayer_time_entity.dart';
 import 'package:prayer_silence_time_app/features/home/domain/usecases/get_prayer_times_usecase.dart';
-
 
 abstract class HomeState extends Equatable {
   const HomeState();
@@ -80,6 +81,7 @@ class HomeCubit extends Cubit<HomeState> {
   final LocationService locationService;
   final SilenceService silenceService;
   final BackgroundAlarmService backgroundAlarmService;
+  final AppPreferences appPreferences;
   Timer? _timer;
 
   HomeCubit({
@@ -87,6 +89,7 @@ class HomeCubit extends Cubit<HomeState> {
     required this.locationService,
     required this.silenceService,
     required this.backgroundAlarmService,
+    required this.appPreferences,
   }) : super(HomeInitial());
 
   Future<void> initHome() async {
@@ -168,6 +171,8 @@ class HomeCubit extends Cubit<HomeState> {
       // Re-schedule alarms
       await backgroundAlarmService.schedulePrayerSilences(
         currentState.prayerTimes.prayers,
+        silenceBefore: appPreferences.getSilenceBefore(),
+        silenceAfter: appPreferences.getSilenceAfter(),
       );
       emit(currentState.copyWith(isAutoSilentEnabled: true));
     } else {
@@ -179,14 +184,8 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future<void> requestDndPermission() async {
     await silenceService.requestDndPermission();
-    // After returning from settings, check if granted
-    final hasPermission = await silenceService.hasDndPermission();
     if (state is HomeLoaded) {
-      final currentState = state as HomeLoaded;
-      emit(currentState.copyWith(hasDndPermission: hasPermission));
-
-      // If they granted it and auto silent was requested, theoretically could auto-enable
-      // but let's let the user toggle again as a safe default.
+      emit((state as HomeLoaded).copyWith(hasDndPermission: true));
     }
   }
 

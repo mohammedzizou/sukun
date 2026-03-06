@@ -8,6 +8,9 @@ class AppPreferencesKeys {
   static const String tokenType = 'tokenType';
   static const String expiresIn = 'expiresIn';
   static const String hasSeenOnboarding = 'hasSeenOnboarding';
+  static const String silenceBefore = 'silenceBefore';
+  static const String silenceAfter = 'silenceAfter';
+  static const String calculationMethod = 'calculationMethod';
 }
 
 abstract class AppPreferencesInputs {
@@ -64,5 +67,42 @@ class AppPreferences implements AppPreferencesInputs, AppPreferencesOutputs {
 
   Future<void> setHasSeenOnboarding() async {
     await sharedPreferences.setBool(AppPreferencesKeys.hasSeenOnboarding, true);
+  }
+
+  int getSilenceBefore() {
+    return sharedPreferences.getInt(AppPreferencesKeys.silenceBefore) ?? 5;
+  }
+
+  Future<void> setSilenceBefore(int minutes) async {
+    await sharedPreferences.setInt(AppPreferencesKeys.silenceBefore, minutes);
+  }
+
+  int getSilenceAfter() {
+    return sharedPreferences.getInt(AppPreferencesKeys.silenceAfter) ?? 15;
+  }
+
+  Future<void> setSilenceAfter(int minutes) async {
+    await sharedPreferences.setInt(AppPreferencesKeys.silenceAfter, minutes);
+  }
+
+  String getCalculationMethod() {
+    return sharedPreferences.getString(AppPreferencesKeys.calculationMethod) ??
+        'Muslim World League';
+  }
+
+  Future<void> setCalculationMethod(String method) async {
+    await sharedPreferences.setString(
+      AppPreferencesKeys.calculationMethod,
+      method,
+    );
+  }
+
+  bool isPrayerSilent(String prayerName) {
+    return sharedPreferences.getBool('mute_${prayerName.toLowerCase()}') ??
+        true; // Default to true (silence enabled)
+  }
+
+  Future<void> setPrayerSilent(String prayerName, bool silent) async {
+    await sharedPreferences.setBool('mute_${prayerName.toLowerCase()}', silent);
   }
 }

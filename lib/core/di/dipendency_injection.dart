@@ -63,6 +63,7 @@ Future initApp() async {
       calculationDataSource: getIt<HomeLocalCalculationDataSource>(),
       localDataSource: getIt<HomeLocalDataSource>(),
       networkInfo: getIt<NetworkInfo>(),
+      appPreferences: getIt<AppPreferences>(),
     ),
   );
 
@@ -85,6 +86,7 @@ Future initApp() async {
       locationService: getIt<LocationService>(),
       silenceService: getIt<SilenceService>(),
       backgroundAlarmService: getIt<BackgroundAlarmService>(),
+      appPreferences: getIt<AppPreferences>(),
     ),
   );
 }

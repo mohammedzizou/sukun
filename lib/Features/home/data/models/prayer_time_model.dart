@@ -28,7 +28,7 @@ class DailyPrayerTimesModel extends DailyPrayerTimesEntity {
         name: 'Sunrise',
         arabicName: 'الشروق',
         time: formatter.format(prayerTimes.sunrise.toLocal()),
-        iconPath: 'assest/icons/sunrise_icon.svg',
+        iconPath: 'assest/icons/maghrib_icon.svg',
       ),
       PrayerTimeEntity(
         name: 'Dhuhr',

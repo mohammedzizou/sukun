@@ -8,6 +8,7 @@ abstract class HomeLocalCalculationDataSource {
     required DateTime date,
     required String city,
     required String country,
+    required String calculationMethod,
   });
 }
 
@@ -20,13 +21,15 @@ class HomeLocalCalculationDataSourceImpl
     required DateTime date,
     required String city,
     required String country,
+    required String calculationMethod,
   }) async {
     final coordinates = Coordinates(latitude, longitude);
 
     // Defaulting to Muslim World League (MWL) as it's commonly used in Algeria
     // In the future, this can be retrieved from settings
     final params = CalculationMethodParameters.muslimWorldLeague();
-    params.madhab = Madhab.shafi; 
+
+    params.madhab = Madhab.shafi;
 
     final prayerTimes = PrayerTimes(
       coordinates: coordinates,
