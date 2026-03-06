@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:prayer_silence_time_app/core/local_data/shared_preferences.dart';
 import 'package:prayer_silence_time_app/core/models/app_location.dart';
 import 'package:prayer_silence_time_app/core/services/background_alarm_service.dart';

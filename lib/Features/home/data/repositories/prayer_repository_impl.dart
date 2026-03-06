@@ -71,7 +71,7 @@ class PrayerRepositoryImpl implements PrayerRepository {
       // Fallback to local if calculation fails
       if (localPrayerTimes != null) {
         return Right(
-          _mergeWithSilenceSettings(localPrayerTimes as DailyPrayerTimesModel),
+          _mergeWithSilenceSettings(localPrayerTimes),
         );
       }
       return Left(Faileur(500, e.toString()));
