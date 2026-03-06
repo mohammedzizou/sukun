@@ -22,7 +22,7 @@ class ProfileAppearanceSelector extends StatelessWidget {
               decoration: ShapeDecoration(
                 color: isDarkMode
                     ? const Color(0x262ECC71)
-                    : Colors.white.withOpacity(0.03),
+                    : Colors.white.withValues(alpha: 0.03),
                 shape: RoundedRectangleBorder(
                   side: BorderSide(
                     width: 0.52,
@@ -39,7 +39,7 @@ class ProfileAppearanceSelector extends StatelessWidget {
                     Icons.nightlight_round,
                     color: isDarkMode
                         ? Colors.white
-                        : Colors.white.withOpacity(0.55),
+                        : Colors.white.withValues(alpha: 0.55),
                     size: 20,
                   ),
                   const SizedBox(height: 6),
@@ -49,7 +49,7 @@ class ProfileAppearanceSelector extends StatelessWidget {
                     style: TextStyle(
                       color: isDarkMode
                           ? Colors.white
-                          : Colors.white.withOpacity(0.55),
+                          : Colors.white.withValues(alpha: 0.55),
                       fontSize: 12,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w600,
@@ -92,7 +92,7 @@ class ProfileAppearanceSelector extends StatelessWidget {
               decoration: ShapeDecoration(
                 color: !isDarkMode
                     ? const Color(0x262ECC71)
-                    : Colors.white.withOpacity(0.03),
+                    : Colors.white.withValues(alpha: 0.03),
                 shape: RoundedRectangleBorder(
                   side: BorderSide(
                     width: 0.52,
@@ -109,7 +109,7 @@ class ProfileAppearanceSelector extends StatelessWidget {
                     Icons.wb_sunny_outlined,
                     color: !isDarkMode
                         ? Colors.white
-                        : Colors.white.withOpacity(0.55),
+                        : Colors.white.withValues(alpha: 0.55),
                     size: 20,
                   ),
                   const SizedBox(height: 6),
@@ -119,7 +119,7 @@ class ProfileAppearanceSelector extends StatelessWidget {
                     style: TextStyle(
                       color: !isDarkMode
                           ? Colors.white
-                          : Colors.white.withOpacity(0.55),
+                          : Colors.white.withValues(alpha: 0.55),
                       fontSize: 12,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w600,

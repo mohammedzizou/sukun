@@ -65,7 +65,7 @@ class SettingsSliderRow extends StatelessWidget {
             activeTrackColor: AppColors.activeGreen,
             inactiveTrackColor: const Color(0x19A3F7BF),
             thumbColor: Colors.white,
-            overlayColor: AppColors.activeGreen.withOpacity(0.2),
+            overlayColor: AppColors.activeGreen.withValues(alpha: 0.2),
             thumbShape: const RoundSliderThumbShape(
               enabledThumbRadius: 9,
               elevation: 4,

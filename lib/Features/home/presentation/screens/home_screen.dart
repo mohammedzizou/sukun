@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,7 +8,7 @@ import 'package:prayer_silence_time_app/core/constants/images.dart';
 import 'package:prayer_silence_time_app/core/constants/theme_data.dart';
 import 'package:prayer_silence_time_app/core/widgets/app_switch.dart';
 import 'package:prayer_silence_time_app/core/di/dipendency_injection.dart';
-import '../cubit/home_cubit.dart';
+import 'package:prayer_silence_time_app/features/home/presentation/cubit/home_cubit.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -99,9 +100,9 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(height: 16),
           _buildPrayerTimesList(state),
           const SizedBox(height: 16),
-          _buildAutoSilentToggle(),
+          _buildAutoSilentToggle(context, state),
           const SizedBox(height: 16),
-          _buildPermissionRequired(),
+          _buildPermissionRequired(context, state),
         ],
       ),
     );
@@ -358,7 +359,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAutoSilentToggle() {
+  Widget _buildAutoSilentToggle(BuildContext context, HomeLoaded state) {
     return Container(
       height: 95.02,
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -381,7 +382,10 @@ class HomeScreen extends StatelessWidget {
               AppIcons.bellOff,
               width: 20,
               height: 20,
-              color: AppColors.activeGreen,
+              colorFilter: const ColorFilter.mode(
+                AppColors.activeGreen,
+                BlendMode.srcIn,
+              ),
             ),
           ),
           const SizedBox(width: 16),
@@ -406,13 +410,26 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
-          AppSwitch(value: true, onChanged: (val) {}),
+          AppSwitch(
+            value: state.isAutoSilentEnabled,
+            onChanged: (val) {
+              if (Platform.isIOS) {
+                _showIOSHelpDialog(context);
+              } else {
+                context.read<HomeCubit>().toggleAutoSilent(val);
+              }
+            },
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildPermissionRequired() {
+  Widget _buildPermissionRequired(BuildContext context, HomeLoaded state) {
+    if (Platform.isIOS || state.hasDndPermission) {
+      return const SizedBox.shrink();
+    }
+
     return Container(
       height: 90.54,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -463,29 +480,63 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          Container(
-            width: 64.25,
-            height: 31.03,
-            decoration: ShapeDecoration(
-              color: AppColors.gold15,
-              shape: RoundedRectangleBorder(
-                side: const BorderSide(width: 0.52, color: AppColors.gold25),
-                borderRadius: BorderRadius.circular(10),
+          GestureDetector(
+            onTap: () {
+              context.read<HomeCubit>().requestDndPermission();
+            },
+            child: Container(
+              width: 64.25,
+              height: 31.03,
+              decoration: ShapeDecoration(
+                color: AppColors.gold15,
+                shape: RoundedRectangleBorder(
+                  side: const BorderSide(width: 0.52, color: AppColors.gold25),
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
-            ),
-            child: const Center(
-              child: Text(
-                'Enable',
-                style: TextStyle(
-                  color: AppColors.goldLight,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
+              child: const Center(
+                child: Text(
+                  'Enable',
+                  style: TextStyle(
+                    color: AppColors.goldLight,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  void _showIOSHelpDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext ctx) {
+        return AlertDialog(
+          backgroundColor: AppColors.surfaceDark,
+          title: const Text(
+            'iOS Auto Silent Limitations',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: const Text(
+            'Apple prevents apps from changing the Ring/Silent switch programmatically.\n\n'
+            'We recommend creating a "Personal Automation" in the iOS Shortcuts app to turn on Do Not Disturb automatically at prayer times.',
+            style: TextStyle(color: AppColors.mint50),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text(
+                'Got it',
+                style: TextStyle(color: AppColors.primaryGreen),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

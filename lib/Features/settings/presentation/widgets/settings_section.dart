@@ -18,7 +18,7 @@ class SettingsSection extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 20),
       decoration: ShapeDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha: 0.05),
         shape: RoundedRectangleBorder(
           side: const BorderSide(width: 0.5, color: Color(0x16A3F7BF)),
           borderRadius: BorderRadius.circular(20),

@@ -2,10 +2,13 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../../domain/entities/prayer_time_entity.dart';
-import '../../domain/usecases/get_prayer_times_usecase.dart';
-import '../../../../core/services/location_service.dart';
-import '../../../../core/models/app_location.dart';
+import 'package:prayer_silence_time_app/core/models/app_location.dart';
+import 'package:prayer_silence_time_app/core/services/background_alarm_service.dart';
+import 'package:prayer_silence_time_app/core/services/location_service.dart';
+import 'package:prayer_silence_time_app/core/services/silence_service.dart';
+import 'package:prayer_silence_time_app/features/home/domain/entities/prayer_time_entity.dart';
+import 'package:prayer_silence_time_app/features/home/domain/usecases/get_prayer_times_usecase.dart';
+
 
 abstract class HomeState extends Equatable {
   const HomeState();
@@ -24,28 +27,43 @@ class HomeLoaded extends HomeState {
   final PrayerTimeEntity? nextPrayer;
   final Duration timeRemaining;
   final AppLocation? location;
+  final bool isAutoSilentEnabled;
+  final bool hasDndPermission;
 
   const HomeLoaded({
     required this.prayerTimes,
     this.nextPrayer,
     this.timeRemaining = Duration.zero,
     this.location,
+    this.isAutoSilentEnabled = false,
+    this.hasDndPermission = false,
   });
 
   @override
-  List<Object?> get props => [prayerTimes, nextPrayer, timeRemaining, location];
+  List<Object?> get props => [
+    prayerTimes,
+    nextPrayer,
+    timeRemaining,
+    location,
+    isAutoSilentEnabled,
+    hasDndPermission,
+  ];
 
   HomeLoaded copyWith({
     DailyPrayerTimesEntity? prayerTimes,
     PrayerTimeEntity? nextPrayer,
     Duration? timeRemaining,
     AppLocation? location,
+    bool? isAutoSilentEnabled,
+    bool? hasDndPermission,
   }) {
     return HomeLoaded(
       prayerTimes: prayerTimes ?? this.prayerTimes,
       nextPrayer: nextPrayer ?? this.nextPrayer,
       timeRemaining: timeRemaining ?? this.timeRemaining,
       location: location ?? this.location,
+      isAutoSilentEnabled: isAutoSilentEnabled ?? this.isAutoSilentEnabled,
+      hasDndPermission: hasDndPermission ?? this.hasDndPermission,
     );
   }
 }
@@ -60,11 +78,15 @@ class HomeError extends HomeState {
 class HomeCubit extends Cubit<HomeState> {
   final GetPrayerTimesUseCase getPrayerTimesUseCase;
   final LocationService locationService;
+  final SilenceService silenceService;
+  final BackgroundAlarmService backgroundAlarmService;
   Timer? _timer;
 
   HomeCubit({
     required this.getPrayerTimesUseCase,
     required this.locationService,
+    required this.silenceService,
+    required this.backgroundAlarmService,
   }) : super(HomeInitial());
 
   Future<void> initHome() async {
@@ -116,11 +138,56 @@ class HomeCubit extends Cubit<HomeState> {
       ),
     );
 
-    result.fold((failure) => emit(HomeError(failure.message)), (prayerTimes) {
-      emit(HomeLoaded(prayerTimes: prayerTimes, location: location));
+    result.fold((failure) => emit(HomeError(failure.message)), (
+      prayerTimes,
+    ) async {
+      final hasPermission = await silenceService.hasDndPermission();
+      emit(
+        HomeLoaded(
+          prayerTimes: prayerTimes,
+          location: location,
+          hasDndPermission: hasPermission,
+        ),
+      );
       _updateNextPrayer(prayerTimes);
       _startTimer();
     });
+  }
+
+  Future<void> toggleAutoSilent(bool value) async {
+    if (state is! HomeLoaded) return;
+    final currentState = state as HomeLoaded;
+
+    if (value) {
+      final hasPermission = await silenceService.hasDndPermission();
+      if (!hasPermission) {
+        // Cannot enable without permission (will show banner on Android)
+        emit(currentState.copyWith(hasDndPermission: false));
+        return;
+      }
+      // Re-schedule alarms
+      await backgroundAlarmService.schedulePrayerSilences(
+        currentState.prayerTimes.prayers,
+      );
+      emit(currentState.copyWith(isAutoSilentEnabled: true));
+    } else {
+      // Cancel alarms
+      await backgroundAlarmService.cancelAllSilences();
+      emit(currentState.copyWith(isAutoSilentEnabled: false));
+    }
+  }
+
+  Future<void> requestDndPermission() async {
+    await silenceService.requestDndPermission();
+    // After returning from settings, check if granted
+    final hasPermission = await silenceService.hasDndPermission();
+    if (state is HomeLoaded) {
+      final currentState = state as HomeLoaded;
+      emit(currentState.copyWith(hasDndPermission: hasPermission));
+
+      // If they granted it and auto silent was requested, theoretically could auto-enable
+      // but let's let the user toggle again as a safe default.
+    }
   }
 
   void _startTimer() {

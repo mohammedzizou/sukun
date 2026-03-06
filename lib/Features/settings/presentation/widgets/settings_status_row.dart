@@ -53,7 +53,7 @@ class SettingsStatusRow extends StatelessWidget {
           decoration: ShapeDecoration(
             color: isActive
                 ? const Color(0x1E2ECC71)
-                : Colors.grey.withOpacity(0.2),
+                : Colors.grey.withValues(alpha: 0.2),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),

@@ -20,7 +20,7 @@ class ProfileSectionContainer extends StatelessWidget {
       width: double.infinity,
       padding: padding,
       decoration: ShapeDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha: 0.05),
         shape: RoundedRectangleBorder(
           side: const BorderSide(width: 0.52, color: Color(0x16A3F7BF)),
           borderRadius: BorderRadius.circular(20),

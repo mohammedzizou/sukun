@@ -3,6 +3,8 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:prayer_silence_time_app/features/home/data/datasources/home_local_calculation_data_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:prayer_silence_time_app/core/services/location_service.dart';
+import 'package:prayer_silence_time_app/core/services/silence_service.dart';
+import 'package:prayer_silence_time_app/core/services/background_alarm_service.dart';
 
 import '../../features/home/data/datasources/home_local_data_source.dart';
 import '../../features/home/data/repositories/prayer_repository_impl.dart';
@@ -16,6 +18,9 @@ import '../networking/network_info.dart';
 GetIt getIt = GetIt.instance;
 
 Future initApp() async {
+  // Initialize Android Alarm Manager
+  await BackgroundAlarmService.init();
+
   // Get shared preferences instance
   final SharedPreferences sharedPreferences =
       await SharedPreferences.getInstance();
@@ -63,6 +68,10 @@ Future initApp() async {
 
   // Services
   getIt.registerLazySingleton<LocationService>(() => LocationService());
+  getIt.registerLazySingleton<SilenceService>(() => SilenceService());
+  getIt.registerLazySingleton<BackgroundAlarmService>(
+    () => BackgroundAlarmService(),
+  );
 
   // UseCases
   getIt.registerLazySingleton<GetPrayerTimesUseCase>(
@@ -74,6 +83,8 @@ Future initApp() async {
     () => HomeCubit(
       getPrayerTimesUseCase: getIt<GetPrayerTimesUseCase>(),
       locationService: getIt<LocationService>(),
+      silenceService: getIt<SilenceService>(),
+      backgroundAlarmService: getIt<BackgroundAlarmService>(),
     ),
   );
 }
