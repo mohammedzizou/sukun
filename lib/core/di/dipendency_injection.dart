@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:prayer_silence_time_app/features/home/data/datasources/home_local_calculation_data_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:prayer_silence_time_app/core/services/location_service.dart';
 
 import '../../features/home/data/datasources/home_local_data_source.dart';
 import '../../features/home/data/repositories/prayer_repository_impl.dart';
@@ -60,13 +61,19 @@ Future initApp() async {
     ),
   );
 
-  // Use Case
+  // Services
+  getIt.registerLazySingleton<LocationService>(() => LocationService());
+
+  // UseCases
   getIt.registerLazySingleton<GetPrayerTimesUseCase>(
     () => GetPrayerTimesUseCase(getIt<PrayerRepository>()),
   );
 
-  // Cubit
-  getIt.registerFactory<HomeCubit>(
-    () => HomeCubit(getIt<GetPrayerTimesUseCase>()),
+  // Blocs/Cubits
+  getIt.registerFactory(
+    () => HomeCubit(
+      getPrayerTimesUseCase: getIt<GetPrayerTimesUseCase>(),
+      locationService: getIt<LocationService>(),
+    ),
   );
 }

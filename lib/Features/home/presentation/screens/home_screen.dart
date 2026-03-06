@@ -15,18 +15,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt<HomeCubit>()
-        ..getPrayerTimes(
-          city: 'Arib',
-          country: 'Algeria',
-          latitude: 36.29052158900566,
-          longitude: 2.03460751770638,
-        ),
+      create: (context) => getIt<HomeCubit>()..initHome(),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: BlocBuilder<HomeCubit, HomeState>(
           builder: (context, state) {
-            if (state is HomeLoading) {
+            if (state is HomeLocationLoading || state is HomeLoading) {
               return _buildLoadingState();
             } else if (state is HomeLoaded) {
               return _buildLoadedState(context, state);
@@ -170,7 +164,9 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              '${state.prayerTimes.city}, ${state.prayerTimes.country}',
+              state.location != null
+                  ? '${state.location!.city}, ${state.location!.country}'
+                  : '${state.prayerTimes.city}, ${state.prayerTimes.country}',
               style: const TextStyle(color: AppColors.mint50, fontSize: 12),
             ),
           ],
