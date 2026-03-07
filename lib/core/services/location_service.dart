@@ -48,8 +48,8 @@ class LocationService {
       if (placemarks.isNotEmpty) {
         Placemark placemark = placemarks.first;
         city =
-            placemark.administrativeArea ??
             placemark.locality ??
+            placemark.administrativeArea ??
             placemark.subAdministrativeArea ??
             'Unknown City';
         country = placemark.country ?? 'Unknown Country';

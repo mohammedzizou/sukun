@@ -31,15 +31,27 @@ class PrayerRepositoryImpl implements PrayerRepository {
     required DateTime date,
   }) async {
     // 1. Always try local cache first (Offline-First)
-    final localPrayerTimes = await localDataSource.getLastPrayerTimes();
+    var localPrayerTimes = await localDataSource.getLastPrayerTimes();
 
     // If we have cached data for the same day, return it immediately to avoid UI lag
     if (localPrayerTimes != null) {
       final isSameDay =
           localPrayerTimes.date.year == date.year &&
           localPrayerTimes.date.month == date.month &&
-          localPrayerTimes.date.day == date.day;
-
+          localPrayerTimes.date.day == date.day &&
+          localPrayerTimes.city == city &&
+          localPrayerTimes.country == country;
+      if (localPrayerTimes.city != city) {
+        _updateCacheInBackground(
+          city: city,
+          country: country,
+          latitude: latitude,
+          longitude: longitude,
+          date: date,
+        );
+        localPrayerTimes = await localDataSource.getLastPrayerTimes();
+        return Right(localPrayerTimes!);
+      }
       if (isSameDay) {
         // Background update attempt (optional, or just return cached)
         _updateCacheInBackground(
@@ -49,6 +61,7 @@ class PrayerRepositoryImpl implements PrayerRepository {
           longitude: longitude,
           date: date,
         );
+
         return Right(localPrayerTimes);
       }
     }
@@ -70,9 +83,7 @@ class PrayerRepositoryImpl implements PrayerRepository {
     } catch (e) {
       // Fallback to local if calculation fails
       if (localPrayerTimes != null) {
-        return Right(
-          _mergeWithSilenceSettings(localPrayerTimes),
-        );
+        return Right(_mergeWithSilenceSettings(localPrayerTimes));
       }
       return Left(Faileur(500, e.toString()));
     }
