@@ -11,6 +11,11 @@ class AppPreferencesKeys {
   static const String silenceBefore = 'silenceBefore';
   static const String silenceAfter = 'silenceAfter';
   static const String calculationMethod = 'calculationMethod';
+  static const String jumuahEnabled = 'jumuahEnabled';
+  static const String jumuahKhutbaTime = 'jumuahKhutbaTime';
+  static const String jumuahSilenceDuration = 'jumuahSilenceDuration';
+  static const String ramadanEnabled = 'ramadanEnabled';
+  static const String tarawihSilenceDuration = 'tarawihSilenceDuration';
 }
 
 abstract class AppPreferencesInputs {
@@ -104,5 +109,62 @@ class AppPreferences implements AppPreferencesInputs, AppPreferencesOutputs {
 
   Future<void> setPrayerSilent(String prayerName, bool silent) async {
     await sharedPreferences.setBool('mute_${prayerName.toLowerCase()}', silent);
+  }
+
+  // Jumu'ah (Friday) Settings
+  bool getJumuahEnabled() {
+    return sharedPreferences.getBool(AppPreferencesKeys.jumuahEnabled) ?? false;
+  }
+
+  Future<void> setJumuahEnabled(bool enabled) async {
+    await sharedPreferences.setBool(AppPreferencesKeys.jumuahEnabled, enabled);
+  }
+
+  String getJumuahKhutbaTime() {
+    return sharedPreferences.getString(AppPreferencesKeys.jumuahKhutbaTime) ??
+        '13:30';
+  }
+
+  Future<void> setJumuahKhutbaTime(String time) async {
+    await sharedPreferences.setString(
+      AppPreferencesKeys.jumuahKhutbaTime,
+      time,
+    );
+  }
+
+  int getJumuahSilenceDuration() {
+    return sharedPreferences.getInt(AppPreferencesKeys.jumuahSilenceDuration) ??
+        45;
+  }
+
+  Future<void> setJumuahSilenceDuration(int minutes) async {
+    await sharedPreferences.setInt(
+      AppPreferencesKeys.jumuahSilenceDuration,
+      minutes,
+    );
+  }
+
+  // Ramadan Settings
+  bool getRamadanEnabled() {
+    return sharedPreferences.getBool(AppPreferencesKeys.ramadanEnabled) ??
+        false;
+  }
+
+  Future<void> setRamadanEnabled(bool enabled) async {
+    await sharedPreferences.setBool(AppPreferencesKeys.ramadanEnabled, enabled);
+  }
+
+  int getTarawihSilenceDuration() {
+    return sharedPreferences.getInt(
+          AppPreferencesKeys.tarawihSilenceDuration,
+        ) ??
+        90;
+  }
+
+  Future<void> setTarawihSilenceDuration(int minutes) async {
+    await sharedPreferences.setInt(
+      AppPreferencesKeys.tarawihSilenceDuration,
+      minutes,
+    );
   }
 }

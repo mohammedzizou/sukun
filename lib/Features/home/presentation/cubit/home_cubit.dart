@@ -170,8 +170,7 @@ class HomeCubit extends Cubit<HomeState> {
       // Re-schedule alarms
       await backgroundAlarmService.schedulePrayerSilences(
         currentState.prayerTimes.prayers,
-        silenceBefore: appPreferences.getSilenceBefore(),
-        silenceAfter: appPreferences.getSilenceAfter(),
+        appPreferences: appPreferences,
       );
       emit(currentState.copyWith(isAutoSilentEnabled: true));
     } else {

@@ -11,6 +11,7 @@ import '../../features/home/data/repositories/prayer_repository_impl.dart';
 import '../../features/home/domain/repositories/prayer_repository.dart';
 import '../../features/home/domain/usecases/get_prayer_times_usecase.dart';
 import '../../features/home/presentation/cubit/home_cubit.dart';
+import '../../features/schedule/presentation/cubit/schedule_cubit.dart';
 import '../local_data/shared_preferences.dart';
 import '../networking/base_repository.dart';
 import '../networking/network_info.dart';
@@ -80,6 +81,9 @@ Future initApp() async {
   );
 
   // Blocs/Cubits
+  getIt.registerFactory(
+    () => ScheduleCubit(appPreferences: getIt<AppPreferences>()),
+  );
   getIt.registerFactory(
     () => HomeCubit(
       getPrayerTimesUseCase: getIt<GetPrayerTimesUseCase>(),

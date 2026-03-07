@@ -15,7 +15,7 @@ class DBHelper {
   // Function to initialize the database with necessary tables and schema.
   Future<Database> intialDb() async {
     String dbPath = await getDatabasesPath();
-    String path = join(dbPath, 'fintechracyuser.db');
+    String path = join(dbPath, 'prayer_silence_time.db');
     Database mydb = await openDatabase(
       path,
       version: 28,

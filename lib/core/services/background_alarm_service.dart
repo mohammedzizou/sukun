@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:intl/intl.dart';
+import 'package:prayer_silence_time_app/core/local_data/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/home/domain/entities/prayer_time_entity.dart';
 import 'silence_service.dart';
@@ -66,21 +67,72 @@ class BackgroundAlarmService {
   /// Schedules silent periods for the provided prayers
   Future<void> schedulePrayerSilences(
     List<PrayerTimeEntity> prayers, {
-    int silenceBefore = 5,
-    int silenceAfter = 15,
+    required AppPreferences appPreferences,
   }) async {
     if (!Platform.isAndroid) return;
 
     final now = DateTime.now();
     final DateFormat formatter = DateFormat('h:mm a');
+    final silenceBefore = appPreferences.getSilenceBefore();
+    final silenceAfter = appPreferences.getSilenceAfter();
 
-    // We cancel any existing alarms (using IDs 0 to 9 for mute, 10 to 19 for unmute)
-    for (int i = 0; i < 20; i++) {
+    // We cancel any existing alarms (using IDs 0 to 29 for more space)
+    for (int i = 0; i < 30; i++) {
       await AndroidAlarmManager.cancel(i);
     }
 
     int alarmId = 0;
+    bool isFriday = now.weekday == DateTime.friday;
+
     for (var prayer in prayers) {
+      // 1. Handle Jumu'ah override for Dhuhr
+      if (isFriday &&
+          appPreferences.getJumuahEnabled() &&
+          prayer.name.toLowerCase() == 'dhuhr') {
+        _logBackground("Scheduling Jumu'ah Khutba override for Dhuhr");
+        try {
+          final khutbaTimeStr = appPreferences.getJumuahKhutbaTime();
+          final khutbaTime = DateFormat('HH:mm').parse(khutbaTimeStr);
+          DateTime khutbaDateTime = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            khutbaTime.hour,
+            khutbaTime.minute,
+          );
+
+          if (khutbaDateTime.isBefore(now)) {
+            khutbaDateTime = khutbaDateTime.add(const Duration(days: 1));
+          }
+
+          // Schedule Khutba Mute
+          await AndroidAlarmManager.oneShotAt(
+            khutbaDateTime,
+            alarmId,
+            muteDeviceCallback,
+            exact: true,
+            wakeup: true,
+          );
+
+          // Schedule Khutba Unmute
+          final khutbaUnmuteTime = khutbaDateTime.add(
+            Duration(minutes: appPreferences.getJumuahSilenceDuration()),
+          );
+          await AndroidAlarmManager.oneShotAt(
+            khutbaUnmuteTime,
+            alarmId + 10,
+            unmuteDeviceCallback,
+            exact: true,
+            wakeup: true,
+          );
+
+          alarmId++;
+          continue; // Skip normal Dhuhr
+        } catch (e) {
+          _logBackground("Error scheduling Jumu'ah: $e");
+        }
+      }
+
       if (!prayer.isSilent) continue;
 
       try {
@@ -104,6 +156,16 @@ class BackgroundAlarmService {
           prayerDateTime = prayerDateTime.add(const Duration(days: 1));
         }
 
+        // 2. Handle Ramadan override for Isha (Tarawih)
+        int currentSilenceAfter = silenceAfter;
+        if (appPreferences.getRamadanEnabled() &&
+            prayer.name.toLowerCase() == 'isha') {
+          currentSilenceAfter += appPreferences.getTarawihSilenceDuration();
+          _logBackground(
+            "Extended Isha silence for Tarawih: $currentSilenceAfter min",
+          );
+        }
+
         // 1. Schedule the Mute Alarm
         await AndroidAlarmManager.oneShotAt(
           scheduledMuteTime,
@@ -113,9 +175,9 @@ class BackgroundAlarmService {
           wakeup: true,
         );
 
-        // 2. Schedule the Unmute Alarm (minutes after prayer)
+        // 2. Schedule the Unmute Alarm
         final scheduledUnmuteTime = prayerDateTime.add(
-          Duration(minutes: silenceAfter),
+          Duration(minutes: currentSilenceAfter),
         );
         await AndroidAlarmManager.oneShotAt(
           scheduledUnmuteTime,
@@ -127,7 +189,7 @@ class BackgroundAlarmService {
 
         alarmId++;
       } catch (e) {
-        // Handle parsing errors
+        _logBackground("Error scheduling prayer $prayer: $e");
       }
     }
   }
