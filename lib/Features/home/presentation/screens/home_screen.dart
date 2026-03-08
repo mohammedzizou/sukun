@@ -2,13 +2,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:prayer_silence_time_app/features/home/presentation/controller/cubit/home_cubit.dart';
+import 'package:sukun/features/home/presentation/controller/cubit/home_cubit.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:prayer_silence_time_app/features/home/presentation/widget/prayer_card.dart';
-import 'package:prayer_silence_time_app/core/constants/images.dart';
-import 'package:prayer_silence_time_app/core/constants/theme_data.dart';
-import 'package:prayer_silence_time_app/core/widgets/app_switch.dart';
-import 'package:prayer_silence_time_app/core/di/dipendency_injection.dart';
+import 'package:sukun/features/home/presentation/widget/prayer_card.dart';
+import 'package:sukun/core/constants/images.dart';
+import 'package:sukun/core/constants/theme_data.dart';
+import 'package:sukun/core/widgets/app_switch.dart';
+import 'package:sukun/core/di/dipendency_injection.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

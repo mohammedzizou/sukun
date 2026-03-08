@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:intl/intl.dart';
-import 'package:prayer_silence_time_app/core/local_data/shared_preferences.dart';
+import 'package:sukun/core/local_data/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/home/domain/entities/prayer_time_entity.dart';
 import '../local_data/daos/silent_logs_dao.dart';

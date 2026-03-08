@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:prayer_silence_time_app/core/widgets/app_background.dart';
-import 'package:prayer_silence_time_app/core/constants/images.dart';
-import 'package:prayer_silence_time_app/core/constants/theme_data.dart';
-import 'package:prayer_silence_time_app/features/main_navigation/presentation/cubit/main_navigation_cubit.dart';
-import 'package:prayer_silence_time_app/features/main_navigation/presentation/cubit/main_navigation_state.dart';
-import 'package:prayer_silence_time_app/features/home/presentation/screens/home_screen.dart';
+import 'package:sukun/core/widgets/app_background.dart';
+import 'package:sukun/core/constants/images.dart';
+import 'package:sukun/core/constants/theme_data.dart';
+import 'package:sukun/features/main_navigation/presentation/cubit/main_navigation_cubit.dart';
+import 'package:sukun/features/main_navigation/presentation/cubit/main_navigation_state.dart';
+import 'package:sukun/features/home/presentation/screens/home_screen.dart';
 
-import 'package:prayer_silence_time_app/features/qibla/presentation/screens/qibla_screen.dart';
-import 'package:prayer_silence_time_app/features/settings/presentation/screens/settings_screen.dart';
-import 'package:prayer_silence_time_app/features/profile/presentation/screens/profile_screen.dart';
+import 'package:sukun/features/qibla/presentation/screens/qibla_screen.dart';
+import 'package:sukun/features/settings/presentation/screens/settings_screen.dart';
+import 'package:sukun/features/profile/presentation/screens/profile_screen.dart';
 
 // Placeholder screens for now
 class PlaceholderScreen extends StatelessWidget {

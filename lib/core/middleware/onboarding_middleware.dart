@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:prayer_silence_time_app/core/di/dipendency_injection.dart';
-import 'package:prayer_silence_time_app/core/local_data/shared_preferences.dart';
+import 'package:sukun/core/di/dipendency_injection.dart';
+import 'package:sukun/core/local_data/shared_preferences.dart';
 
 class OnboardingMiddleware extends GetMiddleware {
   @override

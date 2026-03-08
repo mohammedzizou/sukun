@@ -1,9 +1,9 @@
 // ignore_for_file: constant_identifier_names
 import 'dart:developer';
 import 'package:dio/dio.dart';
-import 'package:prayer_silence_time_app/core/constants/linkapi.dart';
-import 'package:prayer_silence_time_app/core/di/dipendency_injection.dart';
-import 'package:prayer_silence_time_app/core/local_data/shared_preferences.dart';
+import 'package:sukun/core/constants/linkapi.dart';
+import 'package:sukun/core/di/dipendency_injection.dart';
+import 'package:sukun/core/local_data/shared_preferences.dart';
 
 class DioFactory {
   Dio getDio() {

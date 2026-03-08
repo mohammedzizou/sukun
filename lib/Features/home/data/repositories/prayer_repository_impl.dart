@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
-import 'package:prayer_silence_time_app/features/home/data/datasources/home_local_calculation_data_source.dart';
-import 'package:prayer_silence_time_app/features/home/data/datasources/home_local_data_source.dart';
-import 'package:prayer_silence_time_app/features/home/data/models/prayer_time_model.dart';
-import 'package:prayer_silence_time_app/features/home/domain/entities/prayer_time_entity.dart';
-import 'package:prayer_silence_time_app/features/home/domain/repositories/prayer_repository.dart';
-import 'package:prayer_silence_time_app/core/networking/faileur.dart';
-import 'package:prayer_silence_time_app/core/networking/network_info.dart';
+import 'package:sukun/features/home/data/datasources/home_local_calculation_data_source.dart';
+import 'package:sukun/features/home/data/datasources/home_local_data_source.dart';
+import 'package:sukun/features/home/data/models/prayer_time_model.dart';
+import 'package:sukun/features/home/domain/entities/prayer_time_entity.dart';
+import 'package:sukun/features/home/domain/repositories/prayer_repository.dart';
+import 'package:sukun/core/networking/faileur.dart';
+import 'package:sukun/core/networking/network_info.dart';
 
-import 'package:prayer_silence_time_app/core/local_data/shared_preferences.dart';
+import 'package:sukun/core/local_data/shared_preferences.dart';
 
 class PrayerRepositoryImpl implements PrayerRepository {
   final HomeLocalCalculationDataSource calculationDataSource;

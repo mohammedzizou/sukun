@@ -1,11 +1,11 @@
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:prayer_silence_time_app/features/home/data/datasources/home_local_calculation_data_source.dart';
-import 'package:prayer_silence_time_app/features/home/presentation/controller/cubit/home_cubit.dart';
+import 'package:sukun/features/home/data/datasources/home_local_calculation_data_source.dart';
+import 'package:sukun/features/home/presentation/controller/cubit/home_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:prayer_silence_time_app/core/services/location_service.dart';
-import 'package:prayer_silence_time_app/core/services/silence_service.dart';
-import 'package:prayer_silence_time_app/core/services/background_alarm_service.dart';
+import 'package:sukun/core/services/location_service.dart';
+import 'package:sukun/core/services/silence_service.dart';
+import 'package:sukun/core/services/background_alarm_service.dart';
 
 import '../../features/home/data/datasources/home_local_data_source.dart';
 import '../../features/home/data/repositories/prayer_repository_impl.dart';

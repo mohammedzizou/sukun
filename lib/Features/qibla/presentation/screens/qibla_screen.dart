@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
-import 'package:prayer_silence_time_app/core/constants/theme_data.dart';
-import 'package:prayer_silence_time_app/features/qibla/presentation/cubit/qibla_cubit.dart';
-import 'package:prayer_silence_time_app/features/qibla/presentation/widgets/location_error_widget.dart';
-import 'package:prayer_silence_time_app/features/qibla/presentation/widgets/compass_widget.dart';
+import 'package:sukun/core/constants/theme_data.dart';
+import 'package:sukun/features/qibla/presentation/cubit/qibla_cubit.dart';
+import 'package:sukun/features/qibla/presentation/widgets/location_error_widget.dart';
+import 'package:sukun/features/qibla/presentation/widgets/compass_widget.dart';
 
 class QiblaScreen extends StatelessWidget {
   const QiblaScreen({super.key});

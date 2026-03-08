@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:prayer_silence_time_app/core/constants/route.dart';
-import 'package:prayer_silence_time_app/core/di/dipendency_injection.dart';
-import 'package:prayer_silence_time_app/core/util/routes.dart';
+import 'package:sukun/core/constants/route.dart';
+import 'package:sukun/core/di/dipendency_injection.dart';
+import 'package:sukun/core/util/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

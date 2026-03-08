@@ -1,4 +1,4 @@
-package com.example.prayer_silence_time_app
+package com.mohammedzizou.sukun
 
 import io.flutter.embedding.android.FlutterActivity
 

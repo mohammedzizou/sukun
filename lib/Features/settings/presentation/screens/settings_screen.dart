@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:prayer_silence_time_app/core/constants/images.dart';
-import 'package:prayer_silence_time_app/core/constants/theme_data.dart';
-import 'package:prayer_silence_time_app/features/settings/presentation/widgets/settings_dropdown_row.dart';
-import 'package:prayer_silence_time_app/features/settings/presentation/widgets/settings_section.dart';
-import 'package:prayer_silence_time_app/features/settings/presentation/widgets/settings_slider_row.dart';
-import 'package:prayer_silence_time_app/features/settings/presentation/widgets/settings_status_row.dart';
-import 'package:prayer_silence_time_app/features/settings/presentation/widgets/settings_switch_row.dart';
+import 'package:sukun/core/constants/images.dart';
+import 'package:sukun/core/constants/theme_data.dart';
+import 'package:sukun/features/settings/presentation/widgets/settings_dropdown_row.dart';
+import 'package:sukun/features/settings/presentation/widgets/settings_section.dart';
+import 'package:sukun/features/settings/presentation/widgets/settings_slider_row.dart';
+import 'package:sukun/features/settings/presentation/widgets/settings_status_row.dart';
+import 'package:sukun/features/settings/presentation/widgets/settings_switch_row.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});

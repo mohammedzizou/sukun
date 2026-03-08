@@ -5,15 +5,15 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
-import 'package:prayer_silence_time_app/core/local_data/daos/locations_dao.dart';
-import 'package:prayer_silence_time_app/core/local_data/daos/user_settings_dao.dart';
-import 'package:prayer_silence_time_app/core/local_data/shared_preferences.dart';
-import 'package:prayer_silence_time_app/core/models/app_location.dart';
-import 'package:prayer_silence_time_app/core/services/background_alarm_service.dart';
-import 'package:prayer_silence_time_app/core/services/location_service.dart';
-import 'package:prayer_silence_time_app/core/services/silence_service.dart';
-import 'package:prayer_silence_time_app/features/home/domain/entities/prayer_time_entity.dart';
-import 'package:prayer_silence_time_app/features/home/domain/usecases/get_prayer_times_usecase.dart';
+import 'package:sukun/core/local_data/daos/locations_dao.dart';
+import 'package:sukun/core/local_data/daos/user_settings_dao.dart';
+import 'package:sukun/core/local_data/shared_preferences.dart';
+import 'package:sukun/core/models/app_location.dart';
+import 'package:sukun/core/services/background_alarm_service.dart';
+import 'package:sukun/core/services/location_service.dart';
+import 'package:sukun/core/services/silence_service.dart';
+import 'package:sukun/features/home/domain/entities/prayer_time_entity.dart';
+import 'package:sukun/features/home/domain/usecases/get_prayer_times_usecase.dart';
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {

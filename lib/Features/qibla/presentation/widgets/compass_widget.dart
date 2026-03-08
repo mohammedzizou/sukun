@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:prayer_silence_time_app/core/constants/theme_data.dart';
+import 'package:sukun/core/constants/theme_data.dart';
 import 'dart:math' as math;
 
 class CompassWidget extends StatelessWidget {

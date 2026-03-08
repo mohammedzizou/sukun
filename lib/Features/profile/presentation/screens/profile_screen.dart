@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:prayer_silence_time_app/core/constants/images.dart';
-import 'package:prayer_silence_time_app/core/constants/theme_data.dart';
-import 'package:prayer_silence_time_app/features/profile/presentation/widgets/profile_action_row.dart';
-import 'package:prayer_silence_time_app/features/profile/presentation/widgets/profile_appearance_selector.dart';
-import 'package:prayer_silence_time_app/features/profile/presentation/widgets/profile_header_card.dart';
-import 'package:prayer_silence_time_app/features/profile/presentation/widgets/profile_section_container.dart';
+import 'package:sukun/core/constants/images.dart';
+import 'package:sukun/core/constants/theme_data.dart';
+import 'package:sukun/features/profile/presentation/widgets/profile_action_row.dart';
+import 'package:sukun/features/profile/presentation/widgets/profile_appearance_selector.dart';
+import 'package:sukun/features/profile/presentation/widgets/profile_header_card.dart';
+import 'package:sukun/features/profile/presentation/widgets/profile_section_container.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

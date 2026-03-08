@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prayer_silence_time_app/core/widgets/app_switch.dart';
+import 'package:sukun/core/widgets/app_switch.dart';
 
 class SettingsSwitchRow extends StatelessWidget {
   final String title;

@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
-import 'package:prayer_silence_time_app/core/constants/images.dart';
-import 'package:prayer_silence_time_app/core/local_data/shared_preferences.dart';
-import 'package:prayer_silence_time_app/features/onboarding/presentation/cubit/onboarding_cubit.dart';
-import 'package:prayer_silence_time_app/features/onboarding/presentation/widgets/onboarding_page_widget.dart';
-import 'package:prayer_silence_time_app/features/onboarding/presentation/widgets/page_indicator.dart';
+import 'package:sukun/core/constants/images.dart';
+import 'package:sukun/core/local_data/shared_preferences.dart';
+import 'package:sukun/features/onboarding/presentation/cubit/onboarding_cubit.dart';
+import 'package:sukun/features/onboarding/presentation/widgets/onboarding_page_widget.dart';
+import 'package:sukun/features/onboarding/presentation/widgets/page_indicator.dart';
 
 /// The 3 onboarding page data definitions
 const List<OnboardingPageData> _pages = [

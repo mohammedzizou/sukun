@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:prayer_silence_time_app/core/constants/route.dart';
+import 'package:sukun/core/constants/route.dart';
 
 import 'myservises.dart';
 
