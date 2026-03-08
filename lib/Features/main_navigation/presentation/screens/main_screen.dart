@@ -7,7 +7,7 @@ import 'package:prayer_silence_time_app/core/constants/theme_data.dart';
 import 'package:prayer_silence_time_app/features/main_navigation/presentation/cubit/main_navigation_cubit.dart';
 import 'package:prayer_silence_time_app/features/main_navigation/presentation/cubit/main_navigation_state.dart';
 import 'package:prayer_silence_time_app/features/home/presentation/screens/home_screen.dart';
-import 'package:prayer_silence_time_app/features/schedule/presentation/screens/schedule_screen.dart';
+
 import 'package:prayer_silence_time_app/features/qibla/presentation/screens/qibla_screen.dart';
 import 'package:prayer_silence_time_app/features/settings/presentation/screens/settings_screen.dart';
 import 'package:prayer_silence_time_app/features/profile/presentation/screens/profile_screen.dart';
@@ -39,7 +39,6 @@ class MainScreen extends StatelessWidget {
         builder: (context, state) {
           final List<Widget> pages = [
             const HomeScreen(),
-            const ScheduleScreen(),
             const QiblaScreen(),
             const SettingsScreen(),
             const ProfileScreen(),
@@ -77,24 +76,7 @@ class MainScreen extends StatelessWidget {
                   ),
                   label: 'Home',
                 ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    AppIcons.schedule,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.mint35,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                  activeIcon: SvgPicture.asset(
-                    AppIcons.scheduleActive,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.primaryGreen,
-                      BlendMode.srcIn,
-                    ),
-                    width: 20,
-                  ),
-                  label: 'Schedule',
-                ),
+
                 BottomNavigationBarItem(
                   icon: SvgPicture.asset(
                     AppIcons.qibla,

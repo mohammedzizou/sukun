@@ -1,0 +1,447 @@
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+
+import 'dart:async';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
+import 'package:prayer_silence_time_app/core/local_data/daos/locations_dao.dart';
+import 'package:prayer_silence_time_app/core/local_data/daos/user_settings_dao.dart';
+import 'package:prayer_silence_time_app/core/local_data/shared_preferences.dart';
+import 'package:prayer_silence_time_app/core/models/app_location.dart';
+import 'package:prayer_silence_time_app/core/services/background_alarm_service.dart';
+import 'package:prayer_silence_time_app/core/services/location_service.dart';
+import 'package:prayer_silence_time_app/core/services/silence_service.dart';
+import 'package:prayer_silence_time_app/features/home/domain/entities/prayer_time_entity.dart';
+import 'package:prayer_silence_time_app/features/home/domain/usecases/get_prayer_times_usecase.dart';
+part 'home_state.dart';
+
+class HomeCubit extends Cubit<HomeState> {
+  final GetPrayerTimesUseCase getPrayerTimesUseCase;
+  final LocationService locationService;
+  final SilenceService silenceService;
+  final BackgroundAlarmService backgroundAlarmService;
+  final AppPreferences appPreferences;
+  final LocationsDao locationsDao;
+  final UserSettingsDao userSettingsDao;
+  Timer? _timer;
+
+  HomeCubit({
+    required this.getPrayerTimesUseCase,
+    required this.locationService,
+    required this.silenceService,
+    required this.backgroundAlarmService,
+    required this.appPreferences,
+    required this.locationsDao,
+    required this.userSettingsDao,
+  }) : super(HomeInitial());
+
+  Future<void> initHome() async {
+    final hasSeenOnboarding = appPreferences.getHasSeenOnboarding();
+    final isFirstLaunch = !hasSeenOnboarding;
+
+    if (isFirstLaunch) {
+      emit(HomeLocationLoading());
+      try {
+        final location = await locationService.getCurrentLocation();
+
+        await locationsDao.insertLocation(
+          latitude: location.latitude,
+          longitude: location.longitude,
+          city: location.city,
+          country: location.country,
+        );
+        await userSettingsDao.upsertUserSettings(
+          latitude: location.latitude,
+          longitude: location.longitude,
+          city: location.city,
+          country: location.country,
+        );
+
+        await appPreferences.setHasSeenOnboarding();
+
+        await getPrayerTimes(
+          city: location.city,
+          country: location.country,
+          latitude: location.latitude,
+          longitude: location.longitude,
+          location: location,
+        );
+      } catch (e) {
+        final fallbackLocation = AppLocation(
+          latitude: 21.422487,
+          longitude: 39.826206,
+          city: 'Mecca',
+          country: 'Saudi Arabia',
+        );
+        await getPrayerTimes(
+          city: fallbackLocation.city,
+          country: fallbackLocation.country,
+          latitude: fallbackLocation.latitude,
+          longitude: fallbackLocation.longitude,
+          location: fallbackLocation,
+        );
+      }
+    } else {
+      // Normal Launch: Fetch from DB directly, no loading state
+      final lastLocationMaps = await locationsDao.getLastLocation();
+      AppLocation? location;
+      if (lastLocationMaps != null) {
+        location = AppLocation(
+          latitude: lastLocationMaps['latitude'],
+          longitude: lastLocationMaps['longitude'],
+          city: lastLocationMaps['city'] ?? 'Unknown',
+          country: lastLocationMaps['country'] ?? 'Unknown',
+        );
+      } else {
+        location = AppLocation(
+          latitude: 21.422487,
+          longitude: 39.826206,
+          city: 'Mecca',
+          country: 'Saudi Arabia',
+        );
+      }
+
+      final result = await getPrayerTimesUseCase(
+        GetPrayerTimesParams(
+          city: location.city,
+          country: location.country,
+          latitude: location.latitude,
+          longitude: location.longitude,
+          date: DateTime.now(),
+        ),
+      );
+
+      result.fold((failure) => emit(HomeError(failure.message)), (
+        prayerTimes,
+      ) async {
+        final hasPermission = await silenceService.hasDndPermission();
+        final loadedState = _createLoadedState(
+          rawPrayerTimes: prayerTimes,
+          location: location,
+          hasDndPermission: hasPermission,
+        );
+        emit(loadedState);
+        _updateNextPrayer(loadedState.prayerTimes);
+        _startTimer();
+      });
+
+      // Background update silently
+      _updateLocationInBackground(location);
+    }
+  }
+
+  Future<void> _updateLocationInBackground(AppLocation cachedLocation) async {
+    try {
+      final newLocation = await locationService.getCurrentLocation();
+      final distance = Geolocator.distanceBetween(
+        cachedLocation.latitude,
+        cachedLocation.longitude,
+        newLocation.latitude,
+        newLocation.longitude,
+      );
+
+      if (distance > 3000) {
+        // > 3km
+        await locationsDao.insertLocation(
+          latitude: newLocation.latitude,
+          longitude: newLocation.longitude,
+          city: newLocation.city,
+          country: newLocation.country,
+        );
+        await userSettingsDao.upsertUserSettings(
+          latitude: newLocation.latitude,
+          longitude: newLocation.longitude,
+          city: newLocation.city,
+          country: newLocation.country,
+        );
+
+        final result = await getPrayerTimesUseCase(
+          GetPrayerTimesParams(
+            city: newLocation.city,
+            country: newLocation.country,
+            latitude: newLocation.latitude,
+            longitude: newLocation.longitude,
+            date: DateTime.now(),
+          ),
+        );
+
+        result.fold((failure) {}, (prayerTimes) async {
+          if (state is HomeLoaded) {
+            final enriched = _enrichWithSilenceState(prayerTimes);
+            emit(
+              (state as HomeLoaded).copyWith(
+                prayerTimes: enriched,
+                location: newLocation,
+              ),
+            );
+            _updateNextPrayer(enriched);
+          }
+        });
+      }
+    } catch (_) {
+      // Background logic fails silently
+    }
+  }
+
+  Future<void> getPrayerTimes({
+    required String city,
+    required String country,
+    required double latitude,
+    required double longitude,
+    AppLocation? location,
+  }) async {
+    // Only used for initial or forced fetches now where we want loading state
+    emit(HomeLoading());
+    final result = await getPrayerTimesUseCase(
+      GetPrayerTimesParams(
+        city: city,
+        country: country,
+        latitude: latitude,
+        longitude: longitude,
+        date: DateTime.now(),
+      ),
+    );
+
+    result.fold((failure) => emit(HomeError(failure.message)), (
+      prayerTimes,
+    ) async {
+      final hasPermission = await silenceService.hasDndPermission();
+      final loadedState = _createLoadedState(
+        rawPrayerTimes: prayerTimes,
+        location: location,
+        hasDndPermission: hasPermission,
+      );
+      emit(loadedState);
+      _updateNextPrayer(loadedState.prayerTimes);
+      _startTimer();
+    });
+  }
+
+  Future<void> toggleAutoSilent(bool value) async {
+    if (state is! HomeLoaded) return;
+    final currentState = state as HomeLoaded;
+
+    if (value) {
+      final hasPermission = await silenceService.hasDndPermission();
+      if (!hasPermission) {
+        emit(currentState.copyWith(hasDndPermission: false));
+        return;
+      }
+      await backgroundAlarmService.schedulePrayerSilences(
+        currentState.prayerTimes.prayers,
+        appPreferences: appPreferences,
+      );
+      emit(currentState.copyWith(isAutoSilentEnabled: true));
+    } else {
+      await backgroundAlarmService.cancelAllSilences();
+      emit(currentState.copyWith(isAutoSilentEnabled: false));
+    }
+  }
+
+  Future<void> requestDndPermission() async {
+    await silenceService.requestDndPermission();
+    if (state is HomeLoaded) {
+      emit((state as HomeLoaded).copyWith(hasDndPermission: true));
+    }
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (state is HomeLoaded) {
+        final currentState = state as HomeLoaded;
+        if (currentState.timeRemaining.inSeconds > 0) {
+          emit(
+            currentState.copyWith(
+              timeRemaining:
+                  currentState.timeRemaining - const Duration(seconds: 1),
+            ),
+          );
+        } else {
+          _updateNextPrayer(currentState.prayerTimes);
+        }
+      }
+    });
+  }
+
+  void _updateNextPrayer(DailyPrayerTimesEntity prayerTimes) {
+    if (state is! HomeLoaded) return;
+    final now = DateTime.now();
+
+    PrayerTimeEntity? next;
+    Duration remaining = Duration.zero;
+
+    final DateFormat formatter = DateFormat('h:mm a');
+
+    for (var prayer in prayerTimes.prayers) {
+      try {
+        final prayerTime = formatter.parse(prayer.time);
+        final prayerDateTime = DateTime(
+          now.year,
+          now.month,
+          now.day,
+          prayerTime.hour,
+          prayerTime.minute,
+        );
+
+        if (prayerDateTime.isAfter(now)) {
+          next = prayer;
+          remaining = prayerDateTime.difference(now);
+          break;
+        }
+      } catch (e) {
+        continue;
+      }
+    }
+
+    if (next == null && prayerTimes.prayers.isNotEmpty) {
+      next = prayerTimes.prayers.first;
+      try {
+        final prayerTime = formatter.parse(next.time);
+        final tomorrow = now.add(const Duration(days: 1));
+        final nextDateTime = DateTime(
+          tomorrow.year,
+          tomorrow.month,
+          tomorrow.day,
+          prayerTime.hour,
+          prayerTime.minute,
+        );
+        remaining = nextDateTime.difference(now);
+      } catch (e) {
+        remaining = Duration.zero;
+      }
+    }
+
+    emit(
+      (state as HomeLoaded).copyWith(
+        nextPrayer: next,
+        timeRemaining: remaining,
+      ),
+    );
+  }
+
+  @override
+  Future<void> close() {
+    _timer?.cancel();
+    return super.close();
+  }
+
+  // --- Silence Settings & Enrichment ---
+  DailyPrayerTimesEntity _enrichWithSilenceState(DailyPrayerTimesEntity data) {
+    final enrichedPrayers = data.prayers.map((p) {
+      return PrayerTimeEntity(
+        name: p.name,
+        arabicName: p.arabicName,
+        time: p.time,
+        iconPath: p.iconPath,
+        isSilent: appPreferences.isPrayerSilent(p.name),
+      );
+    }).toList();
+
+    return DailyPrayerTimesEntity(
+      date: data.date,
+      city: data.city,
+      country: data.country,
+      prayers: enrichedPrayers,
+    );
+  }
+
+  HomeLoaded _createLoadedState({
+    required DailyPrayerTimesEntity rawPrayerTimes,
+    AppLocation? location,
+    bool hasDndPermission = false,
+  }) {
+    return HomeLoaded(
+      prayerTimes: _enrichWithSilenceState(rawPrayerTimes),
+      location: location,
+      hasDndPermission: hasDndPermission,
+      silenceBefore: appPreferences.getSilenceBefore(),
+      silenceAfter: appPreferences.getSilenceAfter(),
+      jumuahEnabled: appPreferences.getJumuahEnabled(),
+      jumuahKhutbaTime: appPreferences.getJumuahKhutbaTime(),
+      jumuahSilenceDuration: appPreferences.getJumuahSilenceDuration(),
+      ramadanEnabled: appPreferences.getRamadanEnabled(),
+      tarawihSilenceDuration: appPreferences.getTarawihSilenceDuration(),
+    );
+  }
+
+  void togglePrayerSilent(String prayerName) async {
+    if (state is HomeLoaded) {
+      final currentState = state as HomeLoaded;
+      final currentSilent = appPreferences.isPrayerSilent(prayerName);
+      await appPreferences.setPrayerSilent(prayerName, !currentSilent);
+
+      final updatedPrayers = currentState.prayerTimes.prayers.map((p) {
+        if (p.name == prayerName) {
+          return PrayerTimeEntity(
+            name: p.name,
+            arabicName: p.arabicName,
+            time: p.time,
+            iconPath: p.iconPath,
+            isSilent: !currentSilent,
+          );
+        }
+        return p;
+      }).toList();
+
+      final updatedDaily = DailyPrayerTimesEntity(
+        date: currentState.prayerTimes.date,
+        city: currentState.prayerTimes.city,
+        country: currentState.prayerTimes.country,
+        prayers: updatedPrayers,
+      );
+
+      emit(currentState.copyWith(prayerTimes: updatedDaily));
+    }
+  }
+
+  void setJumuahEnabled(bool enabled) async {
+    if (state is HomeLoaded) {
+      await appPreferences.setJumuahEnabled(enabled);
+      emit((state as HomeLoaded).copyWith(jumuahEnabled: enabled));
+    }
+  }
+
+  void setJumuahKhutbaTime(String time) async {
+    if (state is HomeLoaded) {
+      await appPreferences.setJumuahKhutbaTime(time);
+      emit((state as HomeLoaded).copyWith(jumuahKhutbaTime: time));
+    }
+  }
+
+  void setJumuahSilenceDuration(int duration) async {
+    if (state is HomeLoaded) {
+      await appPreferences.setJumuahSilenceDuration(duration);
+      emit((state as HomeLoaded).copyWith(jumuahSilenceDuration: duration));
+    }
+  }
+
+  void setRamadanEnabled(bool enabled) async {
+    if (state is HomeLoaded) {
+      await appPreferences.setRamadanEnabled(enabled);
+      emit((state as HomeLoaded).copyWith(ramadanEnabled: enabled));
+    }
+  }
+
+  void setTarawihSilenceDuration(int duration) async {
+    if (state is HomeLoaded) {
+      await appPreferences.setTarawihSilenceDuration(duration);
+      emit((state as HomeLoaded).copyWith(tarawihSilenceDuration: duration));
+    }
+  }
+
+  void setSilenceBefore(int minutes) async {
+    if (state is HomeLoaded) {
+      await appPreferences.setSilenceBefore(minutes);
+      emit((state as HomeLoaded).copyWith(silenceBefore: minutes));
+    }
+  }
+
+  void setSilenceAfter(int minutes) async {
+    if (state is HomeLoaded) {
+      await appPreferences.setSilenceAfter(minutes);
+      emit((state as HomeLoaded).copyWith(silenceAfter: minutes));
+    }
+  }
+}

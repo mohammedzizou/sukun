@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:prayer_silence_time_app/features/home/data/datasources/home_local_calculation_data_source.dart';
+import 'package:prayer_silence_time_app/features/home/presentation/controller/cubit/home_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:prayer_silence_time_app/core/services/location_service.dart';
 import 'package:prayer_silence_time_app/core/services/silence_service.dart';
@@ -10,9 +11,10 @@ import '../../features/home/data/datasources/home_local_data_source.dart';
 import '../../features/home/data/repositories/prayer_repository_impl.dart';
 import '../../features/home/domain/repositories/prayer_repository.dart';
 import '../../features/home/domain/usecases/get_prayer_times_usecase.dart';
-import '../../features/home/presentation/cubit/home_cubit.dart';
-import '../../features/schedule/presentation/cubit/schedule_cubit.dart';
 import '../local_data/shared_preferences.dart';
+import '../local_data/daos/prayer_times_dao.dart';
+import '../local_data/daos/locations_dao.dart';
+import '../local_data/daos/user_settings_dao.dart';
 import '../networking/base_repository.dart';
 import '../networking/network_info.dart';
 
@@ -48,6 +50,11 @@ Future initApp() async {
     ),
   );
 
+  // DAOs
+  getIt.registerLazySingleton<PrayerTimesDao>(() => PrayerTimesDao());
+  getIt.registerLazySingleton<LocationsDao>(() => LocationsDao());
+  getIt.registerLazySingleton<UserSettingsDao>(() => UserSettingsDao());
+
   // --- Home Feature ---
 
   // Data sources
@@ -55,7 +62,7 @@ Future initApp() async {
     () => HomeLocalCalculationDataSourceImpl(),
   );
   getIt.registerLazySingleton<HomeLocalDataSource>(
-    () => HomeLocalDataSourceImpl(sharedPreferences: sharedPreferences),
+    () => HomeLocalDataSourceImpl(prayerTimesDao: getIt<PrayerTimesDao>()),
   );
 
   // Repository
@@ -82,15 +89,14 @@ Future initApp() async {
 
   // Blocs/Cubits
   getIt.registerFactory(
-    () => ScheduleCubit(appPreferences: getIt<AppPreferences>()),
-  );
-  getIt.registerFactory(
     () => HomeCubit(
       getPrayerTimesUseCase: getIt<GetPrayerTimesUseCase>(),
       locationService: getIt<LocationService>(),
       silenceService: getIt<SilenceService>(),
       backgroundAlarmService: getIt<BackgroundAlarmService>(),
       appPreferences: getIt<AppPreferences>(),
+      locationsDao: getIt<LocationsDao>(),
+      userSettingsDao: getIt<UserSettingsDao>(),
     ),
   );
 }

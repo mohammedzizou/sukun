@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:prayer_silence_time_app/core/local_data/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/home/domain/entities/prayer_time_entity.dart';
+import '../local_data/daos/silent_logs_dao.dart';
 import 'silence_service.dart';
 
 import 'package:flutter/widgets.dart';
@@ -31,6 +32,16 @@ Future<void> muteDeviceCallback() async {
     final silenceService = SilenceService();
     await silenceService.setSilentMode();
     await _logBackground("Successfully muted device.");
+
+    // Log to DB
+    final logsDao = SilentLogsDao();
+    await logsDao.logSilentEvent(
+      date: DateTime.now(),
+      prayerName: 'Scheduled Event',
+      actualStart: DateTime.now(),
+      triggerType: 'scheduled',
+      status: 'success',
+    );
   } catch (e) {
     await _logBackground("Error muting: $e");
   }
@@ -42,10 +53,18 @@ Future<void> unmuteDeviceCallback() async {
   await _logBackground("unmuteDeviceCallback fired!");
   try {
     final silenceService = SilenceService();
-    await silenceService
-        .setSilentMode(); // Should be restoreNormalMode, fixing in next chunk implicitly
     await silenceService.restoreNormalMode();
     await _logBackground("Successfully unmuted device.");
+
+    // Log to DB
+    final logsDao = SilentLogsDao();
+    await logsDao.logSilentEvent(
+      date: DateTime.now(),
+      prayerName: 'Scheduled Event',
+      actualStart: DateTime.now(),
+      triggerType: 'scheduled_unmute',
+      status: 'success',
+    );
   } catch (e) {
     await _logBackground("Error unmuting: $e");
   }

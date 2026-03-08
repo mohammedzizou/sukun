@@ -2,13 +2,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:prayer_silence_time_app/features/home/presentation/controller/cubit/home_cubit.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:prayer_silence_time_app/features/home/presentation/widget/prayer_card.dart';
 import 'package:prayer_silence_time_app/core/constants/images.dart';
 import 'package:prayer_silence_time_app/core/constants/theme_data.dart';
 import 'package:prayer_silence_time_app/core/widgets/app_switch.dart';
 import 'package:prayer_silence_time_app/core/di/dipendency_injection.dart';
-import 'package:prayer_silence_time_app/features/home/presentation/cubit/home_cubit.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -98,11 +98,19 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          _buildPrayerTimesList(state),
+          _buildPrayerTimesList(context, state),
           const SizedBox(height: 16),
           _buildAutoSilentToggle(context, state),
           const SizedBox(height: 16),
           _buildPermissionRequired(context, state),
+          const SizedBox(height: 32),
+          _buildSectionTitle('Global Silence Settings'),
+          const SizedBox(height: 8),
+          _buildGlobalSilenceSettings(context, state),
+          const SizedBox(height: 24),
+          _buildJumuahSection(context, state),
+          const SizedBox(height: 24),
+          _buildRamadanSection(context, state),
         ],
       ),
     );
@@ -344,7 +352,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPrayerTimesList(HomeLoaded state) {
+  Widget _buildPrayerTimesList(BuildContext context, HomeLoaded state) {
     return Column(
       children: state.prayerTimes.prayers.map((prayer) {
         final isNext = prayer == state.nextPrayer;
@@ -354,6 +362,8 @@ class HomeScreen extends StatelessWidget {
           iconPath: prayer.iconPath,
           isSilent: prayer.isSilent,
           isNext: isNext,
+          onToggleSilent: () =>
+              context.read<HomeCubit>().togglePrayerSilent(prayer.name),
         );
       }).toList(),
     );
@@ -546,5 +556,212 @@ class HomeScreen extends StatelessWidget {
     final minutes = twoDigits(duration.inMinutes.remainder(60));
     final seconds = twoDigits(duration.inSeconds.remainder(60));
     return '$hours:$minutes:$seconds';
+  }
+
+  // --- Setting Widgets Migrated From ScheduleScreen ---
+
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title.toUpperCase(),
+      style: const TextStyle(
+        color: AppColors.activeGreen,
+        fontSize: 12,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 1.2,
+      ),
+    );
+  }
+
+  Widget _buildGlobalSilenceSettings(BuildContext context, HomeLoaded state) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceDark,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+      ),
+      child: Column(
+        children: [
+          _buildDurationPicker(
+            context,
+            label: 'Minutes Before Prayer',
+            value: state.silenceBefore,
+            onChanged: (val) => context.read<HomeCubit>().setSilenceBefore(val),
+          ),
+          const Divider(color: Colors.white10, height: 24),
+          _buildDurationPicker(
+            context,
+            label: 'Minutes After Prayer',
+            value: state.silenceAfter,
+            onChanged: (val) => context.read<HomeCubit>().setSilenceAfter(val),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDurationPicker(
+    BuildContext context, {
+    required String label,
+    required int value,
+    required ValueChanged<int> onChanged,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: const TextStyle(color: Colors.white, fontSize: 14)),
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(
+                Icons.remove_circle_outline,
+                color: AppColors.mint45,
+                size: 20,
+              ),
+              onPressed: value > 0 ? () => onChanged(value - 1) : null,
+            ),
+            Text(
+              '$value',
+              style: const TextStyle(
+                color: AppColors.activeGreen,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            IconButton(
+              icon: const Icon(
+                Icons.add_circle_outline,
+                color: AppColors.mint45,
+                size: 20,
+              ),
+              onPressed: () => onChanged(value + 1),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildJumuahSection(BuildContext context, HomeLoaded state) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildSectionTitle('Friday (Jumu\'ah)'),
+            AppSwitch(
+              value: state.jumuahEnabled,
+              onChanged: (val) =>
+                  context.read<HomeCubit>().setJumuahEnabled(val),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        if (state.jumuahEnabled)
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceDark,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Column(
+              children: [
+                _buildSettingRow(
+                  label: 'Khutba Time',
+                  value: state.jumuahKhutbaTime,
+                  onTap: () async {
+                    final time = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay(
+                        hour: int.parse(state.jumuahKhutbaTime.split(':')[0]),
+                        minute: int.parse(state.jumuahKhutbaTime.split(':')[1]),
+                      ),
+                    );
+                    if (time != null) {
+                      final timeStr =
+                          '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+                      context.read<HomeCubit>().setJumuahKhutbaTime(timeStr);
+                    }
+                  },
+                ),
+                const Divider(color: Colors.white10, height: 24),
+                _buildDurationPicker(
+                  context,
+                  label: 'Silence Duration (min)',
+                  value: state.jumuahSilenceDuration,
+                  onChanged: (val) =>
+                      context.read<HomeCubit>().setJumuahSilenceDuration(val),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildRamadanSection(BuildContext context, HomeLoaded state) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildSectionTitle('Ramadan (Tarawih)'),
+            AppSwitch(
+              value: state.ramadanEnabled,
+              onChanged: (val) =>
+                  context.read<HomeCubit>().setRamadanEnabled(val),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        if (state.ramadanEnabled)
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceDark,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: _buildDurationPicker(
+              context,
+              label: 'Tarawih Duration after Isha (min)',
+              value: state.tarawihSilenceDuration,
+              onChanged: (val) =>
+                  context.read<HomeCubit>().setTarawihSilenceDuration(val),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildSettingRow({
+    required String label,
+    required String value,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(color: Colors.white, fontSize: 14),
+          ),
+          Row(
+            children: [
+              Text(
+                value,
+                style: const TextStyle(
+                  color: AppColors.activeGreen,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: AppColors.mint45),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
