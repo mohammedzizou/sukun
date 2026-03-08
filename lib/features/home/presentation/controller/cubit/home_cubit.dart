@@ -228,14 +228,67 @@ class HomeCubit extends Cubit<HomeState> {
         emit(currentState.copyWith(hasDndPermission: false));
         return;
       }
-      await backgroundAlarmService.schedulePrayerSilences(
-        currentState.prayerTimes.prayers,
-        appPreferences: appPreferences,
+
+      // Force all individual prayers to silent when enabling the master switch
+      for (var prayer in currentState.prayerTimes.prayers) {
+        await appPreferences.setPrayerSilent(prayer.name, true);
+      }
+
+      final updatedPrayers = currentState.prayerTimes.prayers.map((p) {
+        return PrayerTimeEntity(
+          name: p.name,
+          arabicName: p.arabicName,
+          time: p.time,
+          iconPath: p.iconPath,
+          isSilent: true,
+        );
+      }).toList();
+
+      final updatedDaily = DailyPrayerTimesEntity(
+        date: currentState.prayerTimes.date,
+        city: currentState.prayerTimes.city,
+        country: currentState.prayerTimes.country,
+        prayers: updatedPrayers,
       );
-      emit(currentState.copyWith(isAutoSilentEnabled: true));
+
+      final newState = currentState.copyWith(
+        isAutoSilentEnabled: true,
+        prayerTimes: updatedDaily,
+      );
+
+      emit(newState);
+      await _rescheduleAlarms(newState);
     } else {
       await backgroundAlarmService.cancelAllSilences();
-      emit(currentState.copyWith(isAutoSilentEnabled: false));
+
+      // Force all individual prayers to non-silent when disabling the master switch
+      for (var prayer in currentState.prayerTimes.prayers) {
+        await appPreferences.setPrayerSilent(prayer.name, false);
+      }
+
+      final updatedPrayers = currentState.prayerTimes.prayers.map((p) {
+        return PrayerTimeEntity(
+          name: p.name,
+          arabicName: p.arabicName,
+          time: p.time,
+          iconPath: p.iconPath,
+          isSilent: false,
+        );
+      }).toList();
+
+      final updatedDaily = DailyPrayerTimesEntity(
+        date: currentState.prayerTimes.date,
+        city: currentState.prayerTimes.city,
+        country: currentState.prayerTimes.country,
+        prayers: updatedPrayers,
+      );
+
+      emit(
+        currentState.copyWith(
+          isAutoSilentEnabled: false,
+          prayerTimes: updatedDaily,
+        ),
+      );
     }
   }
 
@@ -366,6 +419,15 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
+  Future<void> _rescheduleAlarms(HomeLoaded state) async {
+    if (state.isAutoSilentEnabled) {
+      await backgroundAlarmService.schedulePrayerSilences(
+        state.prayerTimes.prayers,
+        appPreferences: appPreferences,
+      );
+    }
+  }
+
   void togglePrayerSilent(String prayerName) async {
     if (state is HomeLoaded) {
       final currentState = state as HomeLoaded;
@@ -392,56 +454,76 @@ class HomeCubit extends Cubit<HomeState> {
         prayers: updatedPrayers,
       );
 
-      emit(currentState.copyWith(prayerTimes: updatedDaily));
+      final newState = currentState.copyWith(prayerTimes: updatedDaily);
+      emit(newState);
+      await _rescheduleAlarms(newState);
     }
   }
 
   void setJumuahEnabled(bool enabled) async {
     if (state is HomeLoaded) {
       await appPreferences.setJumuahEnabled(enabled);
-      emit((state as HomeLoaded).copyWith(jumuahEnabled: enabled));
+      final newState = (state as HomeLoaded).copyWith(jumuahEnabled: enabled);
+      emit(newState);
+      await _rescheduleAlarms(newState);
     }
   }
 
   void setJumuahKhutbaTime(String time) async {
     if (state is HomeLoaded) {
       await appPreferences.setJumuahKhutbaTime(time);
-      emit((state as HomeLoaded).copyWith(jumuahKhutbaTime: time));
+      final newState = (state as HomeLoaded).copyWith(jumuahKhutbaTime: time);
+      emit(newState);
+      await _rescheduleAlarms(newState);
     }
   }
 
   void setJumuahSilenceDuration(int duration) async {
     if (state is HomeLoaded) {
       await appPreferences.setJumuahSilenceDuration(duration);
-      emit((state as HomeLoaded).copyWith(jumuahSilenceDuration: duration));
+      final newState = (state as HomeLoaded).copyWith(
+        jumuahSilenceDuration: duration,
+      );
+      emit(newState);
+      await _rescheduleAlarms(newState);
     }
   }
 
   void setRamadanEnabled(bool enabled) async {
     if (state is HomeLoaded) {
       await appPreferences.setRamadanEnabled(enabled);
-      emit((state as HomeLoaded).copyWith(ramadanEnabled: enabled));
+      final newState = (state as HomeLoaded).copyWith(ramadanEnabled: enabled);
+      emit(newState);
+      await _rescheduleAlarms(newState);
     }
   }
 
   void setTarawihSilenceDuration(int duration) async {
     if (state is HomeLoaded) {
       await appPreferences.setTarawihSilenceDuration(duration);
-      emit((state as HomeLoaded).copyWith(tarawihSilenceDuration: duration));
+      final newState = (state as HomeLoaded).copyWith(
+        tarawihSilenceDuration: duration,
+      );
+      emit(newState);
+      await _rescheduleAlarms(newState);
     }
   }
 
   void setSilenceBefore(int minutes) async {
     if (state is HomeLoaded) {
       await appPreferences.setSilenceBefore(minutes);
-      emit((state as HomeLoaded).copyWith(silenceBefore: minutes));
+      final newState = (state as HomeLoaded).copyWith(silenceBefore: minutes);
+      emit(newState);
+      await _rescheduleAlarms(newState);
     }
   }
 
   void setSilenceAfter(int minutes) async {
     if (state is HomeLoaded) {
       await appPreferences.setSilenceAfter(minutes);
-      emit((state as HomeLoaded).copyWith(silenceAfter: minutes));
+      final newState = (state as HomeLoaded).copyWith(silenceAfter: minutes);
+      emit(newState);
+      await _rescheduleAlarms(newState);
     }
   }
 }
