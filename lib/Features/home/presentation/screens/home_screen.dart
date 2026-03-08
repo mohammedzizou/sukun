@@ -582,17 +582,19 @@ class HomeScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _buildDurationPicker(
+          _buildDurationSlider(
             context,
             label: 'Minutes Before Prayer',
             value: state.silenceBefore,
+            max: 60,
             onChanged: (val) => context.read<HomeCubit>().setSilenceBefore(val),
           ),
-          const Divider(color: Colors.white10, height: 24),
-          _buildDurationPicker(
+          const Divider(color: Colors.white10, height: 16),
+          _buildDurationSlider(
             context,
             label: 'Minutes After Prayer',
             value: state.silenceAfter,
+            max: 60,
             onChanged: (val) => context.read<HomeCubit>().setSilenceAfter(val),
           ),
         ],
@@ -600,42 +602,49 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDurationPicker(
+  Widget _buildDurationSlider(
     BuildContext context, {
     required String label,
     required int value,
+    required int max,
     required ValueChanged<int> onChanged,
   }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.white, fontSize: 14)),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            IconButton(
-              icon: const Icon(
-                Icons.remove_circle_outline,
-                color: AppColors.mint45,
-                size: 20,
-              ),
-              onPressed: value > 0 ? () => onChanged(value - 1) : null,
+            Text(
+              label,
+              style: const TextStyle(color: Colors.white, fontSize: 14),
             ),
             Text(
-              '$value',
+              '$value min',
               style: const TextStyle(
                 color: AppColors.activeGreen,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            IconButton(
-              icon: const Icon(
-                Icons.add_circle_outline,
-                color: AppColors.mint45,
-                size: 20,
-              ),
-              onPressed: () => onChanged(value + 1),
-            ),
           ],
+        ),
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            activeTrackColor: AppColors.activeGreen,
+            inactiveTrackColor: AppColors.mint10,
+            thumbColor: AppColors.activeGreen,
+            overlayColor: AppColors.activeGreen.withValues(alpha: 0.2),
+            trackHeight: 4.0,
+          ),
+          child: Slider(
+            value: value.toDouble() > max.toDouble()
+                ? max.toDouble()
+                : value.toDouble(),
+            min: 0,
+            max: max.toDouble(),
+            divisions: max,
+            onChanged: (val) => onChanged(val.toInt()),
+          ),
         ),
       ],
     );
@@ -684,11 +693,12 @@ class HomeScreen extends StatelessWidget {
                     }
                   },
                 ),
-                const Divider(color: Colors.white10, height: 24),
-                _buildDurationPicker(
+                const Divider(color: Colors.white10, height: 16),
+                _buildDurationSlider(
                   context,
-                  label: 'Silence Duration (min)',
+                  label: 'Silence Duration',
                   value: state.jumuahSilenceDuration,
+                  max: 120,
                   onChanged: (val) =>
                       context.read<HomeCubit>().setJumuahSilenceDuration(val),
                 ),
@@ -722,10 +732,11 @@ class HomeScreen extends StatelessWidget {
               color: AppColors.surfaceDark,
               borderRadius: BorderRadius.circular(14),
             ),
-            child: _buildDurationPicker(
+            child: _buildDurationSlider(
               context,
-              label: 'Tarawih Duration after Isha (min)',
+              label: 'Tarawih Duration after Isha',
               value: state.tarawihSilenceDuration,
+              max: 180,
               onChanged: (val) =>
                   context.read<HomeCubit>().setTarawihSilenceDuration(val),
             ),
