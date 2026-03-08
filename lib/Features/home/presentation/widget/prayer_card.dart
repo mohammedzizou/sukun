@@ -116,14 +116,10 @@ class PrayerCard extends StatelessWidget {
               color: Colors.transparent,
               child: SvgPicture.asset(
                 isSilent ? AppIcons.bellOff : AppIcons.bell,
-                width: 15,
-                height: 15,
+                width: 17,
+                height: 17,
                 colorFilter: ColorFilter.mode(
-                  isSilent
-                      ? isNext
-                            ? AppColors.activeGreen
-                            : AppColors.mint45
-                      : AppColors.primaryGreen,
+                  isSilent ? AppColors.activeGreen : AppColors.primaryGreen,
                   BlendMode.srcIn,
                 ),
               ),
