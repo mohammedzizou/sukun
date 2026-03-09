@@ -106,42 +106,48 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   Widget _buildLoadedState(BuildContext context, HomeLoaded state) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(20, 60, 20, 40),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeader(state),
-          const SizedBox(height: 24),
-          _buildNextPrayerCard(state),
-          const SizedBox(height: 32),
+    return RefreshIndicator(
+      onRefresh: () => context.read<HomeCubit>().refreshHome(),
+      color: AppColors.activeGreen,
+      backgroundColor: AppColors.surfaceDark,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(20, 60, 20, 40),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(state),
+            const SizedBox(height: 24),
+            _buildNextPrayerCard(state),
+            const SizedBox(height: 32),
 
-          _buildPermissionRequired(context, state),
-          const SizedBox(height: 16),
-          const Text(
-            'TODAY\'S PRAYERS',
-            style: TextStyle(
-              color: Color(0xFF8B9A93),
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1,
+            _buildPermissionRequired(context, state),
+            const SizedBox(height: 16),
+            const Text(
+              'TODAY\'S PRAYERS',
+              style: TextStyle(
+                color: Color(0xFF8B9A93),
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1,
+              ),
             ),
-          ),
 
-          const SizedBox(height: 16),
-          _buildPrayerTimesList(context, state),
-          const SizedBox(height: 16),
-          _buildAutoSilentToggle(context, state),
+            const SizedBox(height: 16),
+            _buildPrayerTimesList(context, state),
+            const SizedBox(height: 16),
+            _buildAutoSilentToggle(context, state),
 
-          const SizedBox(height: 32),
-          _buildSectionTitle('Global Silence Settings'),
-          const SizedBox(height: 8),
-          _buildGlobalSilenceSettings(context, state),
-          const SizedBox(height: 24),
-          _buildJumuahSection(context, state),
-          const SizedBox(height: 24),
-          _buildRamadanSection(context, state),
-        ],
+            const SizedBox(height: 32),
+            _buildSectionTitle('Global Silence Settings'),
+            const SizedBox(height: 8),
+            _buildGlobalSilenceSettings(context, state),
+            const SizedBox(height: 24),
+            _buildJumuahSection(context, state),
+            const SizedBox(height: 24),
+            _buildRamadanSection(context, state),
+          ],
+        ),
       ),
     );
   }

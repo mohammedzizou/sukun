@@ -140,6 +140,53 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  Future<void> refreshHome() async {
+    try {
+      final location = await locationService.getCurrentLocation();
+
+      await locationsDao.insertLocation(
+        latitude: location.latitude,
+        longitude: location.longitude,
+        city: location.city,
+        country: location.country,
+      );
+      await userSettingsDao.upsertUserSettings(
+        latitude: location.latitude,
+        longitude: location.longitude,
+        city: location.city,
+        country: location.country,
+      );
+
+      await getPrayerTimes(
+        city: location.city,
+        country: location.country,
+        latitude: location.latitude,
+        longitude: location.longitude,
+        location: location,
+      );
+    } catch (e) {
+      // If location refresh fails, just retry with last location
+      if (state is HomeLoaded) {
+        final current = state as HomeLoaded;
+        final loc =
+            current.location ??
+            AppLocation(
+              latitude: 21.422487,
+              longitude: 39.826206,
+              city: 'Mecca',
+              country: 'Saudi Arabia',
+            );
+        await getPrayerTimes(
+          city: loc.city,
+          country: loc.country,
+          latitude: loc.latitude,
+          longitude: loc.longitude,
+          location: loc,
+        );
+      }
+    }
+  }
+
   Future<void> _updateLocationInBackground(AppLocation cachedLocation) async {
     try {
       final newLocation = await locationService.getCurrentLocation();
