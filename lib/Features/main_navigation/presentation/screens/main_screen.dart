@@ -39,7 +39,9 @@ class MainScreen extends StatelessWidget {
         builder: (context, state) {
           final List<Widget> pages = [
             const HomeScreen(),
-            const QiblaScreen(),
+            state.selectedIndex == 1
+                ? const QiblaScreen()
+                : const SizedBox.shrink(),
             const SettingsScreen(),
             const ProfileScreen(),
           ];
