@@ -664,7 +664,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         color: AppColors.activeGreen,
         fontSize: 12,
         fontWeight: FontWeight.bold,
-        letterSpacing: 1.2,
       ),
     );
   }
