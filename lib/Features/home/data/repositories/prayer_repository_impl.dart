@@ -30,43 +30,31 @@ class PrayerRepositoryImpl implements PrayerRepository {
     required double longitude,
     required DateTime date,
   }) async {
-    // 1. Always try local cache first (Offline-First)
+    // 1. Try local cache
     var localPrayerTimes = await localDataSource.getLastPrayerTimes();
 
-    // If we have cached data for the same day, return it immediately to avoid UI lag
     if (localPrayerTimes != null) {
       final isSameDay =
           localPrayerTimes.date.year == date.year &&
           localPrayerTimes.date.month == date.month &&
-          localPrayerTimes.date.day == date.day &&
-          localPrayerTimes.city == city &&
-          localPrayerTimes.country == country;
-      if (localPrayerTimes.city != city) {
-        _updateCacheInBackground(
-          city: city,
-          country: country,
-          latitude: latitude,
-          longitude: longitude,
-          date: date,
-        );
-        localPrayerTimes = await localDataSource.getLastPrayerTimes();
-        return Right(localPrayerTimes!);
-      }
-      if (isSameDay) {
-        // Background update attempt (optional, or just return cached)
-        _updateCacheInBackground(
-          city: city,
-          country: country,
-          latitude: latitude,
-          longitude: longitude,
-          date: date,
-        );
+          localPrayerTimes.date.day == date.day;
+      final isSameLocation =
+          localPrayerTimes.city == city && localPrayerTimes.country == country;
 
+      if (isSameDay && isSameLocation) {
+        // Return cached for same day/location, update in background
+        _updateCacheInBackground(
+          city: city,
+          country: country,
+          latitude: latitude,
+          longitude: longitude,
+          date: date,
+        );
         return Right(localPrayerTimes);
       }
     }
 
-    // 2. If no valid cache, calculate new times
+    // 2. If no valid cache OR location changed, calculate new times synchronously
     try {
       final method = appPreferences.getCalculationMethod();
       final calculatedPrayerTimes = await calculationDataSource

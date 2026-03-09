@@ -140,6 +140,35 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  Future<void> onAppResumed() async {
+    final now = DateTime.now();
+    bool needsRefresh = false;
+
+    // 1. Check if date changed
+    if (state is HomeLoaded) {
+      final currentState = state as HomeLoaded;
+      final stateDate = currentState.prayerTimes.date;
+      if (stateDate.year != now.year ||
+          stateDate.month != now.month ||
+          stateDate.day != now.day) {
+        needsRefresh = true;
+      }
+    }
+
+    // 2. Refresh permissions regardless
+    await checkPermissions();
+
+    if (needsRefresh) {
+      await refreshHome();
+    } else if (state is HomeLoaded) {
+      // 3. Significant location change check (more sensitive than periodic background)
+      await _updateLocationInBackground(
+        (state as HomeLoaded).location,
+        isExplicitResume: true,
+      );
+    }
+  }
+
   Future<void> refreshHome() async {
     try {
       final location = await locationService.getCurrentLocation();
@@ -187,9 +216,19 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  Future<void> _updateLocationInBackground(AppLocation cachedLocation) async {
+  Future<void> _updateLocationInBackground(
+    AppLocation? cachedLocation, {
+    bool isExplicitResume = false,
+  }) async {
     try {
       final newLocation = await locationService.getCurrentLocation();
+
+      if (cachedLocation == null) {
+        // No cached location, must update
+        await refreshHome();
+        return;
+      }
+
       final distance = Geolocator.distanceBetween(
         cachedLocation.latitude,
         cachedLocation.longitude,
@@ -197,8 +236,15 @@ class HomeCubit extends Cubit<HomeState> {
         newLocation.longitude,
       );
 
-      if (distance > 3000) {
-        // > 3km
+      // Threshold: 3km for periodic background, 500m for app resume
+      final threshold = isExplicitResume ? 500.0 : 3000.0;
+
+      // Also trigger if city or country names changed (e.g. crossing a border)
+      final locationNameChanged =
+          cachedLocation.city != newLocation.city ||
+          cachedLocation.country != newLocation.country;
+
+      if (distance > threshold || locationNameChanged) {
         await locationsDao.insertLocation(
           latitude: newLocation.latitude,
           longitude: newLocation.longitude,
