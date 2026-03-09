@@ -476,6 +476,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       missingPermissions.add('Battery Optimization');
     }
     if (!state.hasExactAlarmPermission) missingPermissions.add('Exact Alarms');
+    if (!state.hasLocationPermission) missingPermissions.add('Location Access');
 
     if (missingPermissions.isEmpty) {
       return const SizedBox.shrink();
@@ -554,6 +555,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               context,
               'Exact Alarms',
               () => context.read<HomeCubit>().requestExactAlarmPermission(),
+            ),
+          if (!state.hasLocationPermission)
+            _buildPermissionRow(
+              context,
+              'Location Access',
+              () => context.read<HomeCubit>().requestLocationPermission(),
             ),
         ],
       ),

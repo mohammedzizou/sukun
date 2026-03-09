@@ -21,6 +21,7 @@ class HomeLoaded extends HomeState {
   final bool hasDndPermission;
   final bool hasBatteryOptimizationPermission;
   final bool hasExactAlarmPermission;
+  final bool hasLocationPermission;
   // New Silence Settings
   final int silenceBefore;
   final int silenceAfter;
@@ -39,6 +40,7 @@ class HomeLoaded extends HomeState {
     this.hasDndPermission = false,
     this.hasBatteryOptimizationPermission = false,
     this.hasExactAlarmPermission = false,
+    this.hasLocationPermission = false,
     this.silenceBefore = 5,
     this.silenceAfter = 15,
     this.jumuahEnabled = false,
@@ -58,6 +60,7 @@ class HomeLoaded extends HomeState {
     hasDndPermission,
     hasBatteryOptimizationPermission,
     hasExactAlarmPermission,
+    hasLocationPermission,
     silenceBefore,
     silenceAfter,
     jumuahEnabled,
@@ -76,6 +79,7 @@ class HomeLoaded extends HomeState {
     bool? hasDndPermission,
     bool? hasBatteryOptimizationPermission,
     bool? hasExactAlarmPermission,
+    bool? hasLocationPermission,
     int? silenceBefore,
     int? silenceAfter,
     bool? jumuahEnabled,
@@ -96,6 +100,8 @@ class HomeLoaded extends HomeState {
           this.hasBatteryOptimizationPermission,
       hasExactAlarmPermission:
           hasExactAlarmPermission ?? this.hasExactAlarmPermission,
+      hasLocationPermission:
+          hasLocationPermission ?? this.hasLocationPermission,
       silenceBefore: silenceBefore ?? this.silenceBefore,
       silenceAfter: silenceAfter ?? this.silenceAfter,
       jumuahEnabled: jumuahEnabled ?? this.jumuahEnabled,
