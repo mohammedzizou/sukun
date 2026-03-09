@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:sukun/features/home/domain/entities/prayer_time_entity.dart';
 import 'package:sukun/core/local_data/shared_preferences.dart';
 import 'package:get/get.dart';
+import 'package:sukun/features/home/presentation/screens/mosque_mode_screen.dart';
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin _notificationsPlugin =
@@ -18,21 +19,42 @@ class NotificationService {
 
     tz.initializeTimeZones();
 
-    const iOSSettings = DarwinInitializationSettings(
+    final List<DarwinNotificationCategory> darwinNotificationCategories = [
+      DarwinNotificationCategory(
+        'prayer_reminder',
+        actions: <DarwinNotificationAction>[
+          DarwinNotificationAction.plain('silence_now', 'Silence Now'.tr),
+        ],
+        options: <DarwinNotificationCategoryOption>{
+          DarwinNotificationCategoryOption.hiddenPreviewShowTitle,
+        },
+      ),
+    ];
+
+    final iOSSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
+      notificationCategories: darwinNotificationCategories,
     );
 
-    const initSettings = InitializationSettings(iOS: iOSSettings);
+    final initSettings = InitializationSettings(iOS: iOSSettings);
 
     await _notificationsPlugin.initialize(
       settings: initSettings,
       onDidReceiveNotificationResponse: (details) {
         log(
-          'Notification clicked: ${details.payload}',
+          'Notification clicked: ${details.payload} action: ${details.actionId}',
           name: 'NotificationService',
         );
+
+        if (details.actionId == 'silence_now' ||
+            details.payload?.contains('prayer') == true ||
+            details.payload?.contains('reminder') == true ||
+            details.payload?.contains('jomaa') == true ||
+            details.payload?.contains('tarawih') == true) {
+          Get.to(() => const MosqueModeScreen());
+        }
       },
     );
 
@@ -164,7 +186,9 @@ class NotificationService {
           presentAlert: true,
           presentBadge: true,
           presentSound: true,
+          sound: 'default',
           interruptionLevel: InterruptionLevel.critical,
+          categoryIdentifier: 'prayer_reminder',
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
