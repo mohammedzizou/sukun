@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -116,7 +118,9 @@ class PrayerCard extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               color: Colors.transparent,
               child: SvgPicture.asset(
-                isSilent ? AppIcons.bellOff : AppIcons.bell,
+                Platform.isIOS
+                    ? (isSilent ? AppIcons.bell : AppIcons.bellOff)
+                    : (isSilent ? AppIcons.bellOff : AppIcons.bell),
                 width: 17,
                 height: 17,
                 colorFilter: ColorFilter.mode(

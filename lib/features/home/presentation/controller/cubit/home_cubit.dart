@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -12,6 +14,7 @@ import 'package:sukun/core/models/app_location.dart';
 import 'package:sukun/core/services/background_alarm_service.dart';
 import 'package:sukun/core/services/location_service.dart';
 import 'package:sukun/core/services/silence_service.dart';
+import 'package:sukun/core/services/notification_service.dart';
 import 'package:sukun/features/home/domain/entities/prayer_time_entity.dart';
 import 'package:sukun/features/home/domain/usecases/get_prayer_times_usecase.dart';
 part 'home_state.dart';
@@ -21,6 +24,7 @@ class HomeCubit extends Cubit<HomeState> {
   final LocationService locationService;
   final SilenceService silenceService;
   final BackgroundAlarmService backgroundAlarmService;
+  final NotificationService notificationService;
   final AppPreferences appPreferences;
   final LocationsDao locationsDao;
   final UserSettingsDao userSettingsDao;
@@ -31,6 +35,7 @@ class HomeCubit extends Cubit<HomeState> {
     required this.locationService,
     required this.silenceService,
     required this.backgroundAlarmService,
+    required this.notificationService,
     required this.appPreferences,
     required this.locationsDao,
     required this.userSettingsDao,
@@ -133,6 +138,7 @@ class HomeCubit extends Cubit<HomeState> {
         emit(loadedState);
         _updateNextPrayer(loadedState.prayerTimes);
         _startTimer();
+        await _rescheduleAlarms(loadedState);
       });
 
       // Background update silently
@@ -326,6 +332,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(loadedState);
       _updateNextPrayer(loadedState.prayerTimes);
       _startTimer();
+      await _rescheduleAlarms(loadedState);
     });
   }
 
@@ -571,9 +578,18 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> _rescheduleAlarms(HomeLoaded state) async {
-    if (state.isAutoSilentEnabled) {
-      await backgroundAlarmService.schedulePrayerSilences(
-        state.prayerTimes.prayers,
+    if (Platform.isAndroid) {
+      if (state.isAutoSilentEnabled) {
+        await backgroundAlarmService.schedulePrayerSilences(
+          state.prayerTimes.prayers,
+          appPreferences: appPreferences,
+        );
+      }
+    } else if (Platform.isIOS) {
+      // On iOS, we schedule notifications even if "Auto Silent" (Mosque Mode) is the trigger
+      // Note: We might want a specific toggle for Mosque Mode on iOS too.
+      await notificationService.scheduleAllNotifications(
+        dailyPrayers: state.prayerTimes,
         appPreferences: appPreferences,
       );
     }

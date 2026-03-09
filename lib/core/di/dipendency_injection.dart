@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sukun/core/services/location_service.dart';
 import 'package:sukun/core/services/silence_service.dart';
 import 'package:sukun/core/services/background_alarm_service.dart';
+import 'package:sukun/core/services/notification_service.dart';
 
 import '../../features/home/data/datasources/home_local_data_source.dart';
 import '../../features/home/data/repositories/prayer_repository_impl.dart';
@@ -29,6 +30,11 @@ Future initApp() async {
 
   // Initialize WorkManager
   await WorkManagerService.init();
+
+  // Initialize Notifications (iOS focus)
+  final notificationService = NotificationService();
+  await notificationService.init();
+  getIt.registerLazySingleton<NotificationService>(() => notificationService);
 
   // Get shared preferences instance
   final SharedPreferences sharedPreferences =
@@ -105,6 +111,7 @@ Future initApp() async {
       locationService: getIt<LocationService>(),
       silenceService: getIt<SilenceService>(),
       backgroundAlarmService: getIt<BackgroundAlarmService>(),
+      notificationService: getIt<NotificationService>(),
       appPreferences: getIt<AppPreferences>(),
       locationsDao: getIt<LocationsDao>(),
       userSettingsDao: getIt<UserSettingsDao>(),

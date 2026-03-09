@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +14,6 @@ import 'package:sukun/features/settings/presentation/widgets/settings_section.da
 import 'package:sukun/features/settings/presentation/widgets/settings_switch_row.dart';
 import 'package:sukun/features/settings/presentation/widgets/profile_header_card.dart';
 import 'package:sukun/features/settings/presentation/widgets/profile_action_row.dart';
-import 'package:sukun/features/settings/presentation/widgets/profile_appearance_selector.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -122,30 +122,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 24),
 
                     // 4. Prayer Silence Behavior Section
-                    SettingsSection(
-                      title: 'PRAYER SILENCE BEHAVIOR'.tr,
-                      icon: const Icon(
-                        Icons.volume_up_outlined,
-                        color: AppColors.activeGreen,
-                        size: 14,
+                    if (Platform.isAndroid)
+                      SettingsSection(
+                        title: 'PRAYER SILENCE BEHAVIOR'.tr,
+                        icon: const Icon(
+                          Icons.volume_up_outlined,
+                          color: AppColors.activeGreen,
+                          size: 14,
+                        ),
+                        children: [
+                          SettingsSwitchRow(
+                            title: 'Restore previous sound mode'.tr,
+                            subtitle:
+                                'Return to your ringtone level after prayer'.tr,
+                            value: state.restoreSound,
+                            onChanged: (val) => _cubit.setRestoreSound(val),
+                          ),
+                          SettingsSwitchRow(
+                            title: 'Vibrate instead of silent'.tr,
+                            subtitle: 'Phone will vibrate during prayer'.tr,
+                            value: state.vibrateInstead,
+                            onChanged: (val) => _cubit.setVibrateInstead(val),
+                          ),
+                        ],
                       ),
-                      children: [
-                        SettingsSwitchRow(
-                          title: 'Restore previous sound mode'.tr,
-                          subtitle:
-                              'Return to your ringtone level after prayer'.tr,
-                          value: state.restoreSound,
-                          onChanged: (val) => _cubit.setRestoreSound(val),
-                        ),
-                        SettingsSwitchRow(
-                          title: 'Vibrate instead of silent'.tr,
-                          subtitle: 'Phone will vibrate during prayer'.tr,
-                          value: state.vibrateInstead,
-                          onChanged: (val) => _cubit.setVibrateInstead(val),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
+                    if (Platform.isAndroid) const SizedBox(height: 24),
 
                     // 5. Calculation Section
                     SettingsSection(

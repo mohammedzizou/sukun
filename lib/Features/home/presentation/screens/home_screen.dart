@@ -10,6 +10,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:sukun/features/home/presentation/widget/prayer_card.dart';
 import 'package:sukun/core/widgets/app_switch.dart';
 import 'package:sukun/core/di/dipendency_injection.dart';
+import 'package:sukun/features/home/presentation/screens/mosque_mode_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -140,7 +141,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             _buildAutoSilentToggle(context, state),
 
             SizedBox(height: 32),
-            _buildSectionTitle('Global Silence Settings'.tr),
+            _buildSectionTitle(
+              Platform.isIOS
+                  ? 'Global Reminder Settings'.tr
+                  : 'Global Silence Settings'.tr,
+            ),
             SizedBox(height: 8),
             _buildGlobalSilenceSettings(context, state),
             SizedBox(height: 24),
@@ -441,7 +446,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Auto Silent Mode'.tr,
+                  Platform.isIOS
+                      ? 'Prayer Notifications'.tr
+                      : 'Auto Silent Mode'.tr,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -450,7 +457,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 ),
                 SizedBox(height: 2),
                 Text(
-                  'Tap to enable automatic silencing'.tr,
+                  Platform.isIOS
+                      ? 'Get notified at prayer times'.tr
+                      : 'Tap to enable automatic silencing'.tr,
                   style: TextStyle(color: AppColors.mint50, fontSize: 12),
                 ),
               ],
@@ -460,7 +469,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             value: state.isAutoSilentEnabled,
             onChanged: (val) {
               if (Platform.isIOS) {
-                _showIOSHelpDialog(context);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const MosqueModeScreen(),
+                  ),
+                );
               } else {
                 context.read<HomeCubit>().toggleAutoSilent(val);
               }
@@ -680,19 +693,24 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         children: [
           _buildDurationSlider(
             context,
-            label: 'Minutes Before Prayer'.tr,
+            label: Platform.isIOS
+                ? 'Reminder Delay (Before)'.tr
+                : 'Minutes Before Prayer'.tr,
             value: state.silenceBefore,
             max: 60,
             onChanged: (val) => context.read<HomeCubit>().setSilenceBefore(val),
           ),
-          Divider(color: Colors.white10, height: 16),
-          _buildDurationSlider(
-            context,
-            label: 'Minutes After Prayer'.tr,
-            value: state.silenceAfter,
-            max: 60,
-            onChanged: (val) => context.read<HomeCubit>().setSilenceAfter(val),
-          ),
+          if (Platform.isAndroid) ...[
+            Divider(color: Colors.white10, height: 16),
+            _buildDurationSlider(
+              context,
+              label: 'Minutes After Prayer'.tr,
+              value: state.silenceAfter,
+              max: 60,
+              onChanged: (val) =>
+                  context.read<HomeCubit>().setSilenceAfter(val),
+            ),
+          ],
         ],
       ),
     );
