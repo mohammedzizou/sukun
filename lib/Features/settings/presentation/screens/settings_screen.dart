@@ -80,24 +80,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 24),
 
                     // 2. Appearance Section
-                    SettingsSection(
-                      title: 'APPEARANCE'.tr,
-                      icon: const Icon(
-                        Icons.palette_outlined,
-                        color: AppColors.activeGreen,
-                        size: 14,
-                      ),
-                      children: [
-                        const SizedBox(height: 8),
-                        ProfileAppearanceSelector(
-                          isDarkMode: state.themeMode == 'Dark',
-                          onModeChanged: (isDark) {
-                            _cubit.setThemeMode(isDark ? 'Dark' : 'Light');
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
+                    // SettingsSection(
+                    //   title: 'APPEARANCE'.tr,
+                    //   icon: const Icon(
+                    //     Icons.palette_outlined,
+                    //     color: AppColors.activeGreen,
+                    //     size: 14,
+                    //   ),
+                    //   children: [
+                    //     const SizedBox(height: 8),
+                    //     ProfileAppearanceSelector(
+                    //       isDarkMode: state.themeMode == 'Dark',
+                    //       onModeChanged: (isDark) {
+                    //         _cubit.setThemeMode(isDark ? 'Dark' : 'Light');
+                    //       },
+                    //     ),
+                    //   ],
+                    // ),
+                    //const SizedBox(height: 24),
 
                     // 3. General Settings Section
                     SettingsSection(
