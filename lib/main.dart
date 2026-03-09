@@ -3,8 +3,10 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sukun/core/constants/route.dart';
 import 'package:sukun/core/di/dipendency_injection.dart';
+import 'package:sukun/core/local_data/daos/prayer_times_dao.dart';
+import 'package:sukun/core/local_data/shared_preferences.dart';
 import 'package:sukun/core/services/workmanager_service.dart';
-import 'package:sukun/core/services/alarm_scheduler_service.dart';
+import 'package:sukun/core/services/background_alarm_service.dart';
 import 'package:sukun/core/util/routes.dart';
 
 void main() async {
@@ -15,7 +17,10 @@ void main() async {
   await WorkManagerService.scheduleDailyTasks();
 
   // Schedule initial prayer alarms
-  await getIt<AlarmSchedulerService>().schedulePrayerAlarms();
+  await getIt<BackgroundAlarmService>().scheduleDailyAlarmsFromDb(
+    prayerTimesDao: getIt<PrayerTimesDao>(),
+    appPreferences: getIt<AppPreferences>(),
+  );
 
   runApp(const MyApp());
 }

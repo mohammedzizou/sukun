@@ -135,7 +135,7 @@ class WorkManagerService {
     await Workmanager().registerPeriodicTask(
       "1",
       taskDailyLocationUpdate,
-      frequency: const Duration(hours: 24),
+      frequency: const Duration(minutes: 15),
       existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
       constraints: Constraints(networkType: NetworkType.connected),
     );

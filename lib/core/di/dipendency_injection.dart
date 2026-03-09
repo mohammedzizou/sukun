@@ -12,7 +12,6 @@ import '../../features/home/data/repositories/prayer_repository_impl.dart';
 import '../../features/home/domain/repositories/prayer_repository.dart';
 import '../../features/home/domain/usecases/get_prayer_times_usecase.dart';
 import 'package:sukun/core/services/workmanager_service.dart';
-import 'package:sukun/core/services/alarm_scheduler_service.dart';
 import '../local_data/shared_preferences.dart';
 import '../local_data/daos/prayer_times_dao.dart';
 import '../local_data/daos/locations_dao.dart';
@@ -24,7 +23,7 @@ GetIt getIt = GetIt.instance;
 
 Future initApp() async {
   // Initialize Android Alarm Manager
-  await AlarmSchedulerService.init();
+  await BackgroundAlarmService.init();
 
   // Initialize WorkManager
   await WorkManagerService.init();
@@ -85,12 +84,6 @@ Future initApp() async {
   getIt.registerLazySingleton<SilenceService>(() => SilenceService());
   getIt.registerLazySingleton<BackgroundAlarmService>(
     () => BackgroundAlarmService(),
-  );
-  getIt.registerLazySingleton<AlarmSchedulerService>(
-    () => AlarmSchedulerService(
-      prayerTimesDao: getIt<PrayerTimesDao>(),
-      appPreferences: getIt<AppPreferences>(),
-    ),
   );
 
   // UseCases

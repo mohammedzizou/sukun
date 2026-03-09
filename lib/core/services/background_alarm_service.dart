@@ -5,8 +5,9 @@ import 'package:sukun/core/local_data/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/home/domain/entities/prayer_time_entity.dart';
 import '../local_data/daos/silent_logs_dao.dart';
+import '../local_data/daos/prayer_times_dao.dart';
 import 'silence_service.dart';
-
+import 'dart:developer' as dev;
 import 'package:flutter/widgets.dart';
 
 // --- Top Level Functions for Android Alarm Manager ---
@@ -252,5 +253,60 @@ class BackgroundAlarmService {
       exact: true,
       wakeup: true,
     );
+  }
+
+  /// Fetches prayer times from DB and schedules alarms
+  Future<void> scheduleDailyAlarmsFromDb({
+    required PrayerTimesDao prayerTimesDao,
+    required AppPreferences appPreferences,
+  }) async {
+    final now = DateTime.now();
+    final prayerData = await prayerTimesDao.getPrayerTimesForDate(now);
+
+    if (prayerData == null) {
+      dev.log("No prayer times in DB for $now", name: "BackgroundAlarm");
+      return;
+    }
+
+    // Convert DB map to entities
+    final prayers = <PrayerTimeEntity>[
+      PrayerTimeEntity(
+        name: 'Fajr',
+        arabicName: 'الفجر',
+        time: prayerData['fajr'],
+        iconPath: '',
+        isSilent: appPreferences.isPrayerSilent('Fajr'),
+      ),
+      PrayerTimeEntity(
+        name: 'Dhuhr',
+        arabicName: 'الظهر',
+        time: prayerData['dhuhr'],
+        iconPath: '',
+        isSilent: appPreferences.isPrayerSilent('Dhuhr'),
+      ),
+      PrayerTimeEntity(
+        name: 'Asr',
+        arabicName: 'العصر',
+        time: prayerData['asr'],
+        iconPath: '',
+        isSilent: appPreferences.isPrayerSilent('Asr'),
+      ),
+      PrayerTimeEntity(
+        name: 'Maghrib',
+        arabicName: 'المغرب',
+        time: prayerData['maghrib'],
+        iconPath: '',
+        isSilent: appPreferences.isPrayerSilent('Maghrib'),
+      ),
+      PrayerTimeEntity(
+        name: 'Isha',
+        arabicName: 'العشاء',
+        time: prayerData['isha'],
+        iconPath: '',
+        isSilent: appPreferences.isPrayerSilent('Isha'),
+      ),
+    ];
+
+    await schedulePrayerSilences(prayers, appPreferences: appPreferences);
   }
 }
