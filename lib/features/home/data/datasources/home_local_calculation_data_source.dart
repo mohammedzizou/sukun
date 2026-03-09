@@ -1,4 +1,5 @@
 import 'package:adhan_dart/adhan_dart.dart';
+import 'package:sukun/core/local_data/daos/prayer_adjustments_dao.dart';
 import '../models/prayer_time_model.dart';
 
 abstract class HomeLocalCalculationDataSource {
@@ -14,6 +15,10 @@ abstract class HomeLocalCalculationDataSource {
 
 class HomeLocalCalculationDataSourceImpl
     implements HomeLocalCalculationDataSource {
+  final PrayerAdjustmentsDao adjustmentsDao;
+
+  HomeLocalCalculationDataSourceImpl({required this.adjustmentsDao});
+
   @override
   Future<DailyPrayerTimesModel> calculatePrayerTimes({
     required double latitude,
@@ -25,7 +30,7 @@ class HomeLocalCalculationDataSourceImpl
   }) async {
     final coordinates = Coordinates(latitude, longitude);
 
-    var params;
+    CalculationParameters params;
     int methodId = 3; // Default MWL
 
     switch (calculationMethod) {
@@ -75,11 +80,15 @@ class HomeLocalCalculationDataSourceImpl
       precision: true,
     );
 
+    final Map<String, int> adjustments = await adjustmentsDao
+        .getAllAdjustments();
+
     return DailyPrayerTimesModel.fromAdhan(
       prayerTimes,
       city,
       country,
       methodId,
+      adjustments: adjustments,
     );
   }
 }

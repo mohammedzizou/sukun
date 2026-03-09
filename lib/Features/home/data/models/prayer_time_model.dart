@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:adhan_dart/adhan_dart.dart';
+import 'dart:developer';
 import '../../domain/entities/prayer_time_entity.dart';
 
 class DailyPrayerTimesModel extends DailyPrayerTimesEntity {
@@ -7,52 +8,89 @@ class DailyPrayerTimesModel extends DailyPrayerTimesEntity {
     required super.date,
     required super.city,
     required super.country,
-    required super.prayers,required this.calculationMethod,
+    required super.prayers,
+    required this.calculationMethod,
   });
   final int calculationMethod;
   factory DailyPrayerTimesModel.fromAdhan(
     PrayerTimes prayerTimes,
     String city,
     String country,
-    int method,
-  ) {
+    int method, {
+    Map<String, int>? adjustments,
+  }) {
     final DateFormat formatter = DateFormat('h:mm a');
+
+    DateTime applyAdjustment(DateTime time, String name) {
+      if (adjustments != null && adjustments.containsKey(name)) {
+        final value = adjustments[name];
+        if (value == null) {
+          log(
+            '[DailyPrayerTimesModel] WARNING: adjustments map contains key "$name" with null value. '
+            'Raw adjustments map: $adjustments',
+          );
+          return time;
+        }
+        log(
+          '[DailyPrayerTimesModel] Applying adjustment for $name: $value minutes. '
+          'Original time=$time',
+        );
+        return time.add(Duration(minutes: value));
+      }
+      log(
+        '[DailyPrayerTimesModel] No adjustment for $name. '
+        'adjustments map: ${adjustments ?? '{}'}',
+      );
+      return time;
+    }
 
     final List<PrayerTimeEntity> prayers = [
       PrayerTimeEntity(
         name: 'Fajr',
         arabicName: 'الفجر',
-        time: formatter.format(prayerTimes.fajr.toLocal()),
+        time: formatter.format(
+          applyAdjustment(prayerTimes.fajr, 'Fajr').toLocal(),
+        ),
         iconPath: 'assest/icons/fajr_icon.svg',
       ),
       PrayerTimeEntity(
         name: 'Sunrise',
         arabicName: 'الشروق',
-        time: formatter.format(prayerTimes.sunrise.toLocal()),
+        time: formatter.format(
+          applyAdjustment(prayerTimes.sunrise, 'Sunrise').toLocal(),
+        ),
         iconPath: 'assest/icons/maghrib_icon.svg',
       ),
       PrayerTimeEntity(
         name: 'Dhuhr',
         arabicName: 'الظهر',
-        time: formatter.format(prayerTimes.dhuhr.toLocal()),
+        time: formatter.format(
+          applyAdjustment(prayerTimes.dhuhr, 'Dhuhr').toLocal(),
+        ),
         iconPath: 'assest/icons/dhuhr_icon.svg',
       ),
       PrayerTimeEntity(
         name: 'Asr',
         arabicName: 'العصر',
-        time: formatter.format(prayerTimes.asr.toLocal()),
+        time: formatter.format(
+          applyAdjustment(prayerTimes.asr, 'Asr').toLocal(),
+        ),
         iconPath: 'assest/icons/asr_icon.svg',
       ),
       PrayerTimeEntity(
         name: 'Maghrib',
         arabicName: 'المغرب',
-        time: formatter.format(prayerTimes.maghrib.toLocal()),
+        time: formatter.format(
+          applyAdjustment(prayerTimes.maghrib, 'Maghrib').toLocal(),
+        ),
         iconPath: 'assest/icons/maghrib_icon.svg',
       ),
       PrayerTimeEntity(
         name: 'Isha',
         arabicName: 'العشاء',
-        time: formatter.format(prayerTimes.isha.toLocal()),
+        time: formatter.format(
+          applyAdjustment(prayerTimes.isha, 'Isha').toLocal(),
+        ),
         iconPath: 'assest/icons/isha_icon.svg',
       ),
     ];

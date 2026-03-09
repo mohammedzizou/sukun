@@ -6,6 +6,7 @@ import 'package:sukun/core/constants/theme_data.dart';
 import 'package:sukun/core/di/dipendency_injection.dart';
 import 'package:sukun/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:sukun/features/settings/presentation/cubit/settings_state.dart';
+import 'package:sukun/features/settings/presentation/screens/prayer_adjustments_screen.dart';
 import 'package:sukun/features/settings/presentation/widgets/settings_dropdown_row.dart';
 import 'package:sukun/features/settings/presentation/widgets/settings_section.dart';
 import 'package:sukun/features/settings/presentation/widgets/settings_switch_row.dart';
@@ -155,6 +156,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ),
                       children: [
+                        ProfileActionRow(
+                          title: 'Prayer Time Adjustments',
+                          subtitle: 'Manually add or subtract minutes',
+                          icon: const Icon(
+                            Icons.timer_outlined,
+                            color: Color(0xFF2ECC71),
+                            size: 20,
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const PrayerAdjustmentsScreen(),
+                              ),
+                            );
+                          },
+                        ),
                         SettingsDropdownRow(
                           title: 'Calculation method',
                           subtitle: 'Used to determine prayer times',

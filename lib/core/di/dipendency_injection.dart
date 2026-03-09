@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:sukun/core/local_data/daos/prayer_adjustments_dao.dart';
 import 'package:sukun/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sukun/features/home/data/datasources/home_local_calculation_data_source.dart';
@@ -59,12 +60,17 @@ Future initApp() async {
   getIt.registerLazySingleton<PrayerTimesDao>(() => PrayerTimesDao());
   getIt.registerLazySingleton<LocationsDao>(() => LocationsDao());
   getIt.registerLazySingleton<UserSettingsDao>(() => UserSettingsDao());
+  getIt.registerLazySingleton<PrayerAdjustmentsDao>(
+    () => PrayerAdjustmentsDao(),
+  );
 
   // --- Home Feature ---
 
   // Data sources
   getIt.registerLazySingleton<HomeLocalCalculationDataSource>(
-    () => HomeLocalCalculationDataSourceImpl(),
+    () => HomeLocalCalculationDataSourceImpl(
+      adjustmentsDao: getIt<PrayerAdjustmentsDao>(),
+    ),
   );
   getIt.registerLazySingleton<HomeLocalDataSource>(
     () => HomeLocalDataSourceImpl(prayerTimesDao: getIt<PrayerTimesDao>()),
