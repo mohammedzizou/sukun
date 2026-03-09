@@ -48,10 +48,15 @@ class LocationService {
       if (placemarks.isNotEmpty) {
         Placemark placemark = placemarks.first;
         city =
-            placemark.locality  ??
-            placemark.administrativeArea ??
-            placemark.subAdministrativeArea ??
+            pickFirst([
+              placemark.locality, // city (best case)
+              placemark.subAdministrativeArea, // district / province
+              placemark.administrativeArea, // state / region
+              placemark.subLocality, // neighborhood
+              placemark.name, // fallback place name
+            ]) ??
             'Unknown City';
+
         country = placemark.country ?? 'Unknown Country';
       }
     } catch (e) {
@@ -64,6 +69,15 @@ class LocationService {
       city: city,
       country: country,
     );
+  }
+
+  String? pickFirst(List<String?> values) {
+    for (final v in values) {
+      if (v != null && v.trim().isNotEmpty) {
+        return v;
+      }
+    }
+    return null;
   }
 
   Future<bool> hasLocationPermission() async {
