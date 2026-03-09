@@ -2,30 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../util/myservises.dart';
 
-List<String> languages = [
-  "bg",
-  "cs",
-  "da",
-  "nl",
-  "en",
-  "et",
-  "fi",
-  "fr",
-  "de",
-  "el",
-  "hu",
-  "it",
-  "no",
-  "pl",
-  "pt",
-  "ro",
-  "ru",
-  "sk",
-  "es",
-  "sv",
-  "tr",
-  "uk"
-];
+List<String> languages = ["ar", "en"];
 
 /// A controller for changing the language of the app.
 class LocaleController extends GetxController {
@@ -51,6 +28,7 @@ class LocaleController extends GetxController {
     }
     super.onInit();
   }
+
   String getDeviceLanguage() {
     final locale = Get.deviceLocale;
     final languageCode = locale?.languageCode.toLowerCase() ?? 'en';

@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:sukun/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sukun/features/home/data/datasources/home_local_calculation_data_source.dart';
 import 'package:sukun/features/home/presentation/controller/cubit/home_cubit.dart';
@@ -102,5 +103,10 @@ Future initApp() async {
       locationsDao: getIt<LocationsDao>(),
       userSettingsDao: getIt<UserSettingsDao>(),
     ),
+  );
+
+  // --- Settings Feature ---
+  getIt.registerFactory(
+    () => SettingsCubit(appPreferences: getIt<AppPreferences>()),
   );
 }

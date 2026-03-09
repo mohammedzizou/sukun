@@ -10,7 +10,6 @@ import 'package:sukun/features/home/presentation/screens/home_screen.dart';
 
 import 'package:sukun/features/qibla/presentation/screens/qibla_screen.dart';
 import 'package:sukun/features/settings/presentation/screens/settings_screen.dart';
-import 'package:sukun/features/profile/presentation/screens/profile_screen.dart';
 
 // Placeholder screens for now
 class PlaceholderScreen extends StatelessWidget {
@@ -43,7 +42,6 @@ class MainScreen extends StatelessWidget {
                 ? const QiblaScreen()
                 : const SizedBox.shrink(),
             const SettingsScreen(),
-            const ProfileScreen(),
           ];
           return Scaffold(
             body: AppBackground(
@@ -114,24 +112,6 @@ class MainScreen extends StatelessWidget {
                     width: 20,
                   ),
                   label: 'Settings',
-                ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    AppIcons.profile,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.mint35,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                  activeIcon: SvgPicture.asset(
-                    AppIcons.profileActive,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.primaryGreen,
-                      BlendMode.srcIn,
-                    ),
-                    width: 20,
-                  ),
-                  label: 'Profile',
                 ),
               ],
             ),

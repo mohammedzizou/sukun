@@ -16,6 +16,10 @@ class AppPreferencesKeys {
   static const String jumuahSilenceDuration = 'jumuahSilenceDuration';
   static const String ramadanEnabled = 'ramadanEnabled';
   static const String tarawihSilenceDuration = 'tarawihSilenceDuration';
+  static const String language = 'language';
+  static const String themeMode = 'themeMode';
+  static const String restoreSound = 'restoreSound';
+  static const String vibrateInstead = 'vibrateInstead';
 }
 
 abstract class AppPreferencesInputs {
@@ -166,5 +170,40 @@ class AppPreferences implements AppPreferencesInputs, AppPreferencesOutputs {
       AppPreferencesKeys.tarawihSilenceDuration,
       minutes,
     );
+  }
+
+  // General Settings
+  String getLanguage() {
+    return sharedPreferences.getString(AppPreferencesKeys.language) ??
+        'English';
+  }
+
+  Future<void> setLanguage(String language) async {
+    await sharedPreferences.setString(AppPreferencesKeys.language, language);
+  }
+
+  String getThemeMode() {
+    return sharedPreferences.getString(AppPreferencesKeys.themeMode) ?? 'Dark';
+  }
+
+  Future<void> setThemeMode(String mode) async {
+    await sharedPreferences.setString(AppPreferencesKeys.themeMode, mode);
+  }
+
+  bool getRestoreSound() {
+    return sharedPreferences.getBool(AppPreferencesKeys.restoreSound) ?? true;
+  }
+
+  Future<void> setRestoreSound(bool restore) async {
+    await sharedPreferences.setBool(AppPreferencesKeys.restoreSound, restore);
+  }
+
+  bool getVibrateInstead() {
+    return sharedPreferences.getBool(AppPreferencesKeys.vibrateInstead) ??
+        false;
+  }
+
+  Future<void> setVibrateInstead(bool vibrate) async {
+    await sharedPreferences.setBool(AppPreferencesKeys.vibrateInstead, vibrate);
   }
 }
