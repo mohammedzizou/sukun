@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sukun/core/constants/images.dart';
+import 'package:sukun/core/constants/theme_data.dart';
 import 'package:sukun/features/home/presentation/controller/cubit/home_cubit.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sukun/features/home/presentation/widget/prayer_card.dart';
-import 'package:sukun/core/constants/images.dart';
-import 'package:sukun/core/constants/theme_data.dart';
 import 'package:sukun/core/widgets/app_switch.dart';
 import 'package:sukun/core/di/dipendency_injection.dart';
 
@@ -55,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             } else if (state is HomeError) {
               return _buildErrorState(context, state.message);
             }
-            return const SizedBox.shrink();
+            return SizedBox.shrink();
           },
         ),
       ),
@@ -64,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   Widget _buildLoadingState() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(20, 60, 20, 40),
+      padding: EdgeInsets.fromLTRB(20, 60, 20, 40),
       child: Shimmer.fromColors(
         baseColor: Colors.grey[900]!,
         highlightColor: Colors.grey[800]!,
@@ -72,9 +73,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(height: 100, color: Colors.white),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             Container(height: 244, color: Colors.white),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
             Container(height: 200, color: Colors.white),
           ],
         ),
@@ -87,10 +88,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error_outline, color: Colors.red, size: 64),
-          const SizedBox(height: 16),
-          Text(message, style: const TextStyle(color: Colors.white)),
-          const SizedBox(height: 24),
+          Icon(Icons.error_outline, color: Colors.red, size: 64),
+          SizedBox(height: 16),
+          Text(message, style: TextStyle(color: Colors.white)),
+          SizedBox(height: 24),
           ElevatedButton(
             onPressed: () => context.read<HomeCubit>().getPrayerTimes(
               city: 'Mecca',
@@ -98,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               latitude: 36.29052158900566,
               longitude: 2.03460751770638,
             ),
-            child: const Text('Retry'),
+            child: Text('Retry'.tr),
           ),
         ],
       ),
@@ -111,21 +112,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       color: AppColors.activeGreen,
       backgroundColor: AppColors.surfaceDark,
       child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(20, 60, 20, 40),
+        physics: AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.fromLTRB(20, 60, 20, 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(state),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             _buildNextPrayerCard(state),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
 
             _buildPermissionRequired(context, state),
-            const SizedBox(height: 16),
-            const Text(
-              'TODAY\'S PRAYERS',
-              style: TextStyle(
+            SizedBox(height: 16),
+            Text(
+              'TODAY\'S PRAYERS'.tr,
+              style: const TextStyle(
                 color: Color(0xFF8B9A93),
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -133,20 +134,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ),
             ),
 
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             _buildPrayerTimesList(context, state),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             _buildAutoSilentToggle(context, state),
 
-            const SizedBox(height: 32),
-            _buildSectionTitle('Global Silence Settings'),
-            const SizedBox(height: 8),
+            SizedBox(height: 32),
+            _buildSectionTitle('Global Silence Settings'.tr),
+            SizedBox(height: 8),
             _buildGlobalSilenceSettings(context, state),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             _buildJumuahSection(context, state),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             _buildRamadanSection(context, state),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
             _buildDebugTools(context, state),
           ],
         ),
@@ -158,15 +159,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Good Night',
+        Text(
+          'Good Night'.tr,
           style: TextStyle(color: AppColors.mint60, fontSize: 12),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'Assalamu Alaikum',
+            Text(
+              'Assalamu Alaikum'.tr,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
@@ -183,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   borderRadius: BorderRadius.circular(21),
                 ),
               ),
-              child: const Center(
+              child: Center(
                 child: Text(
                   '☪',
                   style: TextStyle(
@@ -198,23 +199,23 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             ),
           ],
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         Row(
           children: [
             SvgPicture.asset(
               AppIcons.mapPin,
               width: 14,
-              colorFilter: const ColorFilter.mode(
+              colorFilter: ColorFilter.mode(
                 AppColors.textGrey,
                 BlendMode.srcIn,
               ),
             ),
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
             Text(
               state.location != null
                   ? '${state.location!.city}, ${state.location!.country}'
                   : '${state.prayerTimes.city}, ${state.prayerTimes.country}',
-              style: const TextStyle(color: AppColors.mint50, fontSize: 12),
+              style: TextStyle(color: AppColors.mint50, fontSize: 12),
             ),
           ],
         ),
@@ -224,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   Widget _buildNextPrayerCard(HomeLoaded state) {
     final nextPrayer = state.nextPrayer;
-    if (nextPrayer == null) return const SizedBox.shrink();
+    if (nextPrayer == null) return SizedBox.shrink();
 
     return Stack(
       children: [
@@ -236,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             height: 160,
             decoration: ShapeDecoration(
               gradient: RadialGradient(
-                center: const Alignment(0.50, 0.50),
+                center: Alignment(0.50, 0.50),
                 radius: 0.71,
                 colors: [
                   AppColors.activeGreen15,
@@ -252,19 +253,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         Container(
           width: double.infinity,
           height: 244.01,
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(20),
           clipBehavior: Clip.antiAlias,
           decoration: ShapeDecoration(
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
               begin: Alignment(0.00, 0.00),
               end: Alignment(1.00, 1.00),
               colors: [AppColors.activeGreen18, AppColors.surfaceGradientDark],
             ),
             shape: RoundedRectangleBorder(
-              side: const BorderSide(
-                width: 0.52,
-                color: AppColors.activeGreen28,
-              ),
+              side: BorderSide(width: 0.52, color: AppColors.activeGreen28),
               borderRadius: BorderRadius.circular(24),
             ),
           ),
@@ -272,11 +270,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'NEXT PRAYER',
+                    'NEXT PRAYER'.tr,
                     style: TextStyle(
                       color: AppColors.mint65,
                       fontSize: 10,
@@ -285,17 +283,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     ),
                   ),
                   Text(
-                    'Prayer time',
+                    'Prayer time'.tr,
                     style: TextStyle(color: AppColors.mint65, fontSize: 10),
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    nextPrayer.name,
+                    nextPrayer.name.tr,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 28,
@@ -304,7 +302,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   ),
                   Text(
                     nextPrayer.time,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.mint100,
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -316,7 +314,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 children: [
                   Text(
                     nextPrayer.arabicName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.mint50,
                       fontSize: 15,
                       fontFamily: 'Noto Naskh Arabic',
@@ -326,10 +324,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               Container(
                 height: 93.48,
-                padding: const EdgeInsets.symmetric(horizontal: 18),
+                padding: EdgeInsets.symmetric(horizontal: 18),
                 decoration: ShapeDecoration(
                   color: Colors.black.withValues(alpha: 0.20),
                   shape: RoundedRectangleBorder(
@@ -343,8 +341,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          'TIME REMAINING',
+                        Text(
+                          'TIME REMAINING'.tr,
                           style: TextStyle(
                             color: AppColors.textGrey,
                             fontSize: 10,
@@ -352,10 +350,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                             letterSpacing: 1,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
                           _formatDuration(state.timeRemaining),
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -365,8 +363,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: const BoxDecoration(
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
                         color: AppColors.surfaceDark,
                         shape: BoxShape.circle,
                       ),
@@ -374,7 +372,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         AppIcons.bellOff,
                         width: 20,
                         height: 20,
-                        colorFilter: const ColorFilter.mode(
+                        colorFilter: ColorFilter.mode(
                           AppColors.primaryGreen,
                           BlendMode.srcIn,
                         ),
@@ -410,18 +408,18 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Widget _buildAutoSilentToggle(BuildContext context, HomeLoaded state) {
     return Container(
       height: 95.02,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: 20),
       decoration: ShapeDecoration(
         color: AppColors.white.withValues(alpha: 0.05),
         shape: RoundedRectangleBorder(
-          side: const BorderSide(width: 0.52, color: AppColors.mint10),
+          side: BorderSide(width: 0.52, color: AppColors.mint10),
           borderRadius: BorderRadius.circular(20),
         ),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: AppColors.surfaceDark,
               borderRadius: BorderRadius.circular(12),
@@ -430,20 +428,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               AppIcons.bellOff,
               width: 20,
               height: 20,
-              colorFilter: const ColorFilter.mode(
+              colorFilter: ColorFilter.mode(
                 AppColors.activeGreen,
                 BlendMode.srcIn,
               ),
             ),
           ),
-          const SizedBox(width: 16),
-          const Expanded(
+          SizedBox(width: 16),
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Auto Silent Mode',
+                  'Auto Silent Mode'.tr,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -452,7 +450,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 ),
                 SizedBox(height: 2),
                 Text(
-                  'Tap to enable automatic silencing',
+                  'Tap to enable automatic silencing'.tr,
                   style: TextStyle(color: AppColors.mint50, fontSize: 12),
                 ),
               ],
@@ -475,27 +473,31 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   Widget _buildPermissionRequired(BuildContext context, HomeLoaded state) {
     if (Platform.isIOS) {
-      return const SizedBox.shrink();
+      return SizedBox.shrink();
     }
 
     final missingPermissions = <String>[];
-    if (!state.hasDndPermission) missingPermissions.add('Do Not Disturb');
+    if (!state.hasDndPermission) missingPermissions.add('Do Not Disturb'.tr);
     if (!state.hasBatteryOptimizationPermission) {
-      missingPermissions.add('Battery Optimization');
+      missingPermissions.add('Battery Optimization'.tr);
     }
-    if (!state.hasExactAlarmPermission) missingPermissions.add('Exact Alarms');
-    if (!state.hasLocationPermission) missingPermissions.add('Location Access');
+    if (!state.hasExactAlarmPermission) {
+      missingPermissions.add('Exact Alarms'.tr);
+    }
+    if (!state.hasLocationPermission) {
+      missingPermissions.add('Location Access'.tr);
+    }
 
     if (missingPermissions.isEmpty) {
-      return const SizedBox.shrink();
+      return SizedBox.shrink();
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: ShapeDecoration(
         color: AppColors.gold05,
         shape: RoundedRectangleBorder(
-          side: const BorderSide(width: 0.52, color: AppColors.gold18),
+          side: BorderSide(width: 0.52, color: AppColors.gold18),
           borderRadius: BorderRadius.circular(16),
         ),
       ),
@@ -513,20 +515,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.shield_outlined,
                   color: AppColors.gold80, // yellow/gold
                   size: 20,
                 ),
               ),
-              const SizedBox(width: 16),
-              const Expanded(
+              SizedBox(width: 16),
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Permissions Required',
+                      'Permissions Required'.tr,
                       style: TextStyle(
                         color: AppColors.goldLight,
                         fontSize: 14,
@@ -535,7 +537,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     ),
                     SizedBox(height: 2),
                     Text(
-                      'Please grant all for auto-silent mode to work reliably in background',
+                      'Please grant all for auto-silent mode to work reliably in background'
+                          .tr,
                       style: TextStyle(color: AppColors.gold60, fontSize: 12),
                     ),
                   ],
@@ -543,17 +546,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           if (!state.hasDndPermission)
             _buildPermissionRow(
               context,
-              'Do Not Disturb',
+              'Do Not Disturb'.tr,
               () => context.read<HomeCubit>().requestDndPermission(),
             ),
           if (!state.hasBatteryOptimizationPermission)
             _buildPermissionRow(
               context,
-              'Battery Optimization',
+              'Battery Optimization'.tr,
               () => context
                   .read<HomeCubit>()
                   .requestBatteryOptimizationPermission(),
@@ -561,13 +564,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           if (!state.hasExactAlarmPermission)
             _buildPermissionRow(
               context,
-              'Exact Alarms',
+              'Exact Alarms'.tr,
               () => context.read<HomeCubit>().requestExactAlarmPermission(),
             ),
           if (!state.hasLocationPermission)
             _buildPermissionRow(
               context,
-              'Location Access',
+              'Location Access'.tr,
               () => context.read<HomeCubit>().requestLocationPermission(),
             ),
         ],
@@ -581,27 +584,27 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     VoidCallback onTap,
   ) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0, left: 4),
+      padding: EdgeInsets.only(bottom: 8.0, left: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             '• $title',
-            style: const TextStyle(color: AppColors.gold60, fontSize: 13),
+            style: TextStyle(color: AppColors.gold60, fontSize: 13),
           ),
           GestureDetector(
             onTap: onTap,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: ShapeDecoration(
                 color: AppColors.gold15,
                 shape: RoundedRectangleBorder(
-                  side: const BorderSide(width: 0.52, color: AppColors.gold25),
+                  side: BorderSide(width: 0.52, color: AppColors.gold25),
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text(
-                'Enable',
+              child: Text(
+                'Enable'.tr,
                 style: TextStyle(
                   color: AppColors.goldLight,
                   fontSize: 11,
@@ -621,11 +624,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       builder: (BuildContext ctx) {
         return AlertDialog(
           backgroundColor: AppColors.surfaceDark,
-          title: const Text(
-            'iOS Auto Silent Limitations',
+          title: Text(
+            'iOS Auto Silent Limitations'.tr,
             style: TextStyle(color: Colors.white),
           ),
-          content: const Text(
+          content: Text(
             'Apple prevents apps from changing the Ring/Silent switch programmatically.\n\n'
             'We recommend creating a "Personal Automation" in the iOS Shortcuts app to turn on Do Not Disturb automatically at prayer times.',
             style: TextStyle(color: AppColors.mint50),
@@ -633,8 +636,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(),
-              child: const Text(
-                'Got it',
+              child: Text(
+                'Got it'.tr,
                 style: TextStyle(color: AppColors.primaryGreen),
               ),
             ),
@@ -657,7 +660,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Widget _buildSectionTitle(String title) {
     return Text(
       title.toUpperCase(),
-      style: const TextStyle(
+      style: TextStyle(
         color: AppColors.activeGreen,
         fontSize: 12,
         fontWeight: FontWeight.bold,
@@ -668,7 +671,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   Widget _buildGlobalSilenceSettings(BuildContext context, HomeLoaded state) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.surfaceDark,
         borderRadius: BorderRadius.circular(14),
@@ -678,15 +681,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         children: [
           _buildDurationSlider(
             context,
-            label: 'Minutes Before Prayer',
+            label: 'Minutes Before Prayer'.tr,
             value: state.silenceBefore,
             max: 60,
             onChanged: (val) => context.read<HomeCubit>().setSilenceBefore(val),
           ),
-          const Divider(color: Colors.white10, height: 16),
+          Divider(color: Colors.white10, height: 16),
           _buildDurationSlider(
             context,
-            label: 'Minutes After Prayer',
+            label: 'Minutes After Prayer'.tr,
             value: state.silenceAfter,
             max: 60,
             onChanged: (val) => context.read<HomeCubit>().setSilenceAfter(val),
@@ -709,13 +712,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              label,
-              style: const TextStyle(color: Colors.white, fontSize: 14),
-            ),
+            Text(label, style: TextStyle(color: Colors.white, fontSize: 14)),
             Text(
               '$value min',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.activeGreen,
                 fontWeight: FontWeight.bold,
               ),
@@ -751,7 +751,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildSectionTitle('Friday (Jumu\'ah)'),
+            _buildSectionTitle('Friday (Jumu\'ah)'.tr),
             AppSwitch(
               value: state.jumuahEnabled,
               onChanged: (val) =>
@@ -759,10 +759,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         if (state.jumuahEnabled)
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: AppColors.surfaceDark,
               borderRadius: BorderRadius.circular(14),
@@ -770,7 +770,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             child: Column(
               children: [
                 _buildSettingRow(
-                  label: 'Khutba Time',
+                  label: 'Khutba Time'.tr,
                   value: state.jumuahKhutbaTime,
                   onTap: () async {
                     final time = await showTimePicker(
@@ -787,10 +787,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     }
                   },
                 ),
-                const Divider(color: Colors.white10, height: 16),
+                Divider(color: Colors.white10, height: 16),
                 _buildDurationSlider(
                   context,
-                  label: 'Silence Duration',
+                  label: 'Silence Duration'.tr,
                   value: state.jumuahSilenceDuration,
                   max: 120,
                   onChanged: (val) =>
@@ -810,7 +810,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildSectionTitle('Ramadan (Tarawih)'),
+            _buildSectionTitle('Ramadan (Tarawih)'.tr),
             AppSwitch(
               value: state.ramadanEnabled,
               onChanged: (val) =>
@@ -818,17 +818,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         if (state.ramadanEnabled)
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: AppColors.surfaceDark,
               borderRadius: BorderRadius.circular(14),
             ),
             child: _buildDurationSlider(
               context,
-              label: 'Tarawih Duration after Isha',
+              label: 'Tarawih Duration after Isha'.tr,
               value: state.tarawihSilenceDuration,
               max: 180,
               onChanged: (val) =>
@@ -849,20 +849,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: const TextStyle(color: Colors.white, fontSize: 14),
-          ),
+          Text(label, style: TextStyle(color: Colors.white, fontSize: 14)),
           Row(
             children: [
               Text(
                 value,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.activeGreen,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Icon(Icons.chevron_right, color: AppColors.mint45),
+              Icon(Icons.chevron_right, color: AppColors.mint45),
             ],
           ),
         ],
@@ -874,10 +871,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('Debug & Tools'),
-        const SizedBox(height: 12),
+        _buildSectionTitle('Debug & Tools'.tr),
+        SizedBox(height: 12),
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: AppColors.surfaceDark,
             borderRadius: BorderRadius.circular(14),
@@ -890,20 +887,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Background Service Test',
-                style: TextStyle(
+              Text(
+                'Background Service Test'.tr,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 4),
-              const Text(
-                'Schedule a 30s test (15s delay + 15s duration) to verify silent mode works in background.',
-                style: TextStyle(color: AppColors.mint50, fontSize: 12),
+              SizedBox(height: 4),
+              Text(
+                'Schedule a 30s test (15s delay + 15s duration) to verify silent mode works in background.'
+                    .tr,
+                style: const TextStyle(color: AppColors.mint50, fontSize: 12),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -925,8 +923,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   ),
                   child: Text(
                     state.isTestScheduled
-                        ? 'Test Scheduled (Wait 45s...)'
-                        : 'Run Background Test',
+                        ? 'Test Scheduled (Wait 45s...)'.tr
+                        : 'Run Background Test'.tr,
                   ),
                 ),
               ),

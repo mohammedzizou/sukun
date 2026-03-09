@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sukun/features/home/domain/usecases/get_prayer_times_usecase.dart';
@@ -33,8 +34,8 @@ class _PrayerAdjustmentsView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
-          'Prayer Adjustments',
+        title: Text(
+          'Prayer Adjustments'.tr,
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -101,7 +102,7 @@ class _PrayerAdjustmentsView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              prayer.name,
+                              prayer.name.tr,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -110,7 +111,7 @@ class _PrayerAdjustmentsView extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Current: ${prayer.time}',
+                              'Current: '.tr + prayer.time,
                               style: const TextStyle(
                                 color: Color(0xB2A3F7BF),
                                 fontSize: 13,
@@ -131,7 +132,7 @@ class _PrayerAdjustmentsView extends StatelessWidget {
                             width: 60,
                             alignment: Alignment.center,
                             child: Text(
-                              '${adjustment >= 0 ? '+' : ''}$adjustment min',
+                              '${adjustment >= 0 ? '+' : ''}$adjustment${' min'.tr}',
                               style: TextStyle(
                                 color: adjustment == 0
                                     ? Colors.white70

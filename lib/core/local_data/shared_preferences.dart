@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, strict_top_level_inference
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppPreferencesKeys {
@@ -173,7 +174,21 @@ class AppPreferences implements AppPreferencesInputs, AppPreferencesOutputs {
   }
 
   // General Settings
-  String getLanguage() {
+  String getDeviceLanguageCode() {
+    final locale = Get.deviceLocale;
+    final languageCode = locale?.languageCode.toLowerCase() ?? 'en';
+    return ['en', 'ar'].contains(languageCode) ? languageCode : 'en';
+  }
+
+  String getLanguageCode() {
+    String? lang = sharedPreferences.getString(AppPreferencesKeys.language);
+    if (lang == null) {
+      return getDeviceLanguageCode();
+    }
+    return lang == 'Arabic' ? 'ar' : 'en';
+  }
+
+  String getLanguageDisplayName() {
     return sharedPreferences.getString(AppPreferencesKeys.language) ??
         'English';
   }

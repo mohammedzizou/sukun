@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ProfileHeaderCard extends StatelessWidget {
   final String city;
@@ -17,7 +18,6 @@ class ProfileHeaderCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
-      // ... (rest of the decoration)
       decoration: ShapeDecoration(
         gradient: const LinearGradient(
           begin: Alignment(0.00, 0.00),
@@ -60,9 +60,9 @@ class ProfileHeaderCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Salah Silent User',
-                  style: TextStyle(
+                Text(
+                  'Salah Silent User'.tr,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontFamily: 'Inter',
@@ -96,8 +96,8 @@ class ProfileHeaderCard extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   isAutoLocation
-                      ? 'Auto-detected via GPS'
-                      : 'Manually set location',
+                      ? 'Auto-detected via GPS'.tr
+                      : 'Manually set location'.tr,
                   style: const TextStyle(
                     color: Color(0x72A3F7BF),
                     fontSize: 11,

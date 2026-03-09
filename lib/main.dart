@@ -7,6 +7,7 @@ import 'package:sukun/core/local_data/daos/prayer_times_dao.dart';
 import 'package:sukun/core/local_data/shared_preferences.dart';
 import 'package:sukun/core/services/workmanager_service.dart';
 import 'package:sukun/core/services/background_alarm_service.dart';
+import 'package:sukun/core/localization/translation.dart';
 import 'package:sukun/core/util/routes.dart';
 
 void main() async {
@@ -30,9 +31,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appPreferences = getIt<AppPreferences>();
+    final initialLocale = Locale(appPreferences.getLanguageCode());
+
     return GetMaterialApp(
       title: 'Salah Silent',
       debugShowCheckedModeBanner: false,
+      translations: MyTranslation(),
+      locale: initialLocale,
+      fallbackLocale: const Locale('en'),
       theme: ThemeData(
         brightness: Brightness.dark,
         primaryColor: const Color(0xFF4CAF50),

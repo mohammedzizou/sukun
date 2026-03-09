@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AppButton extends StatelessWidget {
   final String text;
@@ -26,7 +27,7 @@ class AppButton extends StatelessWidget {
         elevation: 0,
       ),
       child: Text(
-        text,
+        text.tr,
         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
     );

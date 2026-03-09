@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class SettingsState extends Equatable {
-  final String language;
+  final String languageCode;
   final String themeMode;
   final bool restoreSound;
   final bool vibrateInstead;
@@ -13,7 +13,7 @@ class SettingsState extends Equatable {
   final int silenceAfter;
 
   const SettingsState({
-    this.language = 'English',
+    this.languageCode = 'en',
     this.themeMode = 'Dark',
     this.restoreSound = true,
     this.vibrateInstead = false,
@@ -26,7 +26,7 @@ class SettingsState extends Equatable {
   });
 
   SettingsState copyWith({
-    String? language,
+    String? languageCode,
     String? themeMode,
     bool? restoreSound,
     bool? vibrateInstead,
@@ -38,7 +38,7 @@ class SettingsState extends Equatable {
     int? silenceAfter,
   }) {
     return SettingsState(
-      language: language ?? this.language,
+      languageCode: languageCode ?? this.languageCode,
       themeMode: themeMode ?? this.themeMode,
       restoreSound: restoreSound ?? this.restoreSound,
       vibrateInstead: vibrateInstead ?? this.vibrateInstead,
@@ -53,7 +53,7 @@ class SettingsState extends Equatable {
 
   @override
   List<Object?> get props => [
-    language,
+    languageCode,
     themeMode,
     restoreSound,
     vibrateInstead,

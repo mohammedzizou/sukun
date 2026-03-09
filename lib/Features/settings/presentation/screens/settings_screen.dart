@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sukun/core/constants/images.dart';
@@ -47,8 +48,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Settings',
+                    Text(
+                      'Settings'.tr,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 22,
@@ -58,8 +59,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      'Manage your profile and application preferences',
+                    Text(
+                      'Manage your profile and application preferences'.tr,
                       style: TextStyle(
                         color: Color(0x7FA3F7BF),
                         fontSize: 13,
@@ -80,7 +81,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                     // 2. Appearance Section
                     SettingsSection(
-                      title: 'APPEARANCE',
+                      title: 'APPEARANCE'.tr,
                       icon: const Icon(
                         Icons.palette_outlined,
                         color: AppColors.activeGreen,
@@ -100,7 +101,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                     // 3. General Settings Section
                     SettingsSection(
-                      title: 'GENERAL',
+                      title: 'GENERAL'.tr,
                       icon: const Icon(
                         Icons.settings_outlined,
                         color: AppColors.activeGreen,
@@ -108,10 +109,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                       children: [
                         SettingsDropdownRow(
-                          title: 'Language',
-                          subtitle: 'Application display language',
-                          value: state.language,
-                          options: const ['English', 'Arabic', 'French'],
+                          title: 'Language'.tr,
+                          subtitle: 'Application display language'.tr,
+                          value: state.languageCode == 'ar'
+                              ? 'Arabic'.tr
+                              : 'English'.tr,
+                          options: ['English'.tr, 'Arabic'.tr],
                           onChanged: (val) => _cubit.setLanguage(val),
                         ),
                       ],
@@ -120,7 +123,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                     // 4. Prayer Silence Behavior Section
                     SettingsSection(
-                      title: 'PRAYER SILENCE BEHAVIOR',
+                      title: 'PRAYER SILENCE BEHAVIOR'.tr,
                       icon: const Icon(
                         Icons.volume_up_outlined,
                         color: AppColors.activeGreen,
@@ -128,15 +131,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                       children: [
                         SettingsSwitchRow(
-                          title: 'Restore previous sound mode',
+                          title: 'Restore previous sound mode'.tr,
                           subtitle:
-                              'Return to your ringtone level after prayer',
+                              'Return to your ringtone level after prayer'.tr,
                           value: state.restoreSound,
                           onChanged: (val) => _cubit.setRestoreSound(val),
                         ),
                         SettingsSwitchRow(
-                          title: 'Vibrate instead of silent',
-                          subtitle: 'Phone will vibrate during prayer',
+                          title: 'Vibrate instead of silent'.tr,
+                          subtitle: 'Phone will vibrate during prayer'.tr,
                           value: state.vibrateInstead,
                           onChanged: (val) => _cubit.setVibrateInstead(val),
                         ),
@@ -146,7 +149,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                     // 5. Calculation Section
                     SettingsSection(
-                      title: 'LOCATION & CALCULATION',
+                      title: 'LOCATION & CALCULATION'.tr,
                       icon: SvgPicture.asset(
                         AppIcons.mapPin,
                         width: 14,
@@ -157,8 +160,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                       children: [
                         ProfileActionRow(
-                          title: 'Prayer Time Adjustments',
-                          subtitle: 'Manually add or subtract minutes',
+                          title: 'Prayer Time Adjustments'.tr,
+                          subtitle: 'Manually add or subtract minutes'.tr,
                           icon: const Icon(
                             Icons.timer_outlined,
                             color: Color(0xFF2ECC71),
@@ -175,15 +178,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           },
                         ),
                         SettingsDropdownRow(
-                          title: 'Calculation method',
-                          subtitle: 'Used to determine prayer times',
+                          title: 'Calculation method'.tr,
+                          subtitle: 'Used to determine prayer times'.tr,
                           value: state.calculationMethod,
-                          options: const [
-                            'Muslim World League',
-                            'Islamic Society of North America',
-                            'Egyptian General Authority',
-                            'Umm Al-Qura, Makkah',
-                            'University of Islamic Sciences, Karachi',
+                          options: [
+                            'Muslim World League'.tr,
+                            'Islamic Society of North America'.tr,
+                            'Egyptian General Authority'.tr,
+                            'Umm Al-Qura, Makkah'.tr,
+                            'University of Islamic Sciences, Karachi'.tr,
                           ],
                           onChanged: (val) => _cubit.setCalculationMethod(val),
                         ),
@@ -193,7 +196,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                     // 6. About Section
                     SettingsSection(
-                      title: 'ABOUT',
+                      title: 'ABOUT'.tr,
                       icon: const Icon(
                         Icons.info_outline,
                         color: AppColors.activeGreen,
@@ -206,8 +209,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             color: AppColors.activeGreen,
                             size: 17,
                           ),
-                          title: 'About Salah Silent',
-                          subtitle: 'Version 1.0.0',
+                          title: 'About Salah Silent'.tr,
+                          subtitle: 'Version 1.0.0'.tr,
                           onTap: () {},
                         ),
                         ProfileActionRow(
@@ -216,7 +219,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             color: AppColors.activeGreen,
                             size: 17,
                           ),
-                          title: 'Privacy Policy',
+                          title: 'Privacy Policy'.tr,
                           showDivider: false,
                           onTap: () {},
                         ),
@@ -224,9 +227,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     const SizedBox(height: 32),
 
-                    const Center(
+                    Center(
                       child: Text(
-                        'Salah Silent v1.0.0 · Made with ☪ for the Ummah',
+                        'Salah Silent v1.0.0 · Made with ☪ for the Ummah'.tr,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0x33A3F7BF),

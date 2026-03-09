@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sukun/core/constants/theme_data.dart';
 
 class LocationErrorWidget extends StatelessWidget {
@@ -21,7 +22,7 @@ class LocationErrorWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Text(
-              error ?? 'Unknown Error',
+              error?.tr ?? 'Unknown Error'.tr,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: errorColor,
@@ -40,7 +41,7 @@ class LocationErrorWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text("Retry"),
+            child: Text("Retry".tr),
             onPressed: () {
               if (callback != null) callback!();
             },

@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:sukun/core/constants/theme_data.dart';
@@ -46,17 +47,17 @@ class _QiblahCompassContentState extends State<_QiblahCompassContent> {
                   }
 
                   if (state is QiblaUnsupported) {
-                    return const Center(
+                    return Center(
                       child: Text(
-                        "Device sensor not supported",
-                        style: TextStyle(color: Colors.white),
+                        "Device sensor not supported".tr,
+                        style: const TextStyle(color: Colors.white),
                       ),
                     );
                   }
 
                   if (state is QiblaLocationDisabled) {
                     return LocationErrorWidget(
-                      error: "Please enable Location service",
+                      error: "Please enable Location service".tr,
                       callback: () =>
                           context.read<QiblaCubit>().checkLocationStatus(),
                     );
@@ -64,15 +65,15 @@ class _QiblahCompassContentState extends State<_QiblahCompassContent> {
 
                   if (state is QiblaPermissionDenied) {
                     return LocationErrorWidget(
-                      error: "Location service permission denied",
+                      error: "Location service permission denied".tr,
                       callback: () =>
                           context.read<QiblaCubit>().checkLocationStatus(),
                     );
                   }
 
                   if (state is QiblaPermissionDeniedForever) {
-                    return const LocationErrorWidget(
-                      error: "Location service Denied Forever !",
+                    return LocationErrorWidget(
+                      error: "Location service Denied Forever !".tr,
                     );
                   }
 
@@ -92,9 +93,9 @@ class _QiblahCompassContentState extends State<_QiblahCompassContent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Qibla Direction',
-            style: TextStyle(
+          Text(
+            'Qibla Direction'.tr,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -110,9 +111,9 @@ class _QiblahCompassContentState extends State<_QiblahCompassContent> {
                 size: 16,
               ),
               const SizedBox(width: 4),
-              const Text(
-                'Mecca, Saudi Arabia',
-                style: TextStyle(
+              Text(
+                'Mecca, Saudi Arabia'.tr,
+                style: const TextStyle(
                   color: AppColors.activeGreen12,
                   fontSize: 15,
                   fontWeight: FontWeight.w400,
@@ -139,7 +140,7 @@ class QiblahCompassWidget extends StatelessWidget {
         }
 
         if (snapshot.hasError) {
-          return Center(child: Text("Error: ${snapshot.error}"));
+          return Center(child: Text("${"Error: ".tr}${snapshot.error}"));
         }
 
         if (!snapshot.hasData) {
@@ -192,15 +193,15 @@ class QiblahCompassWidget extends StatelessWidget {
     String text;
     IconData icon;
     if (isFound) {
-      text = "You are now facing Mecca";
+      text = "You are now facing Mecca".tr;
       icon = Icons.check_circle;
     } else if (relativeAngle > 0) {
       text =
-          "Rotate the phone ${relativeAngle.abs().toStringAsFixed(0)}° to the right";
+          "${"Rotate the phone ".tr}${relativeAngle.abs().toStringAsFixed(0)}°${" to the right".tr}";
       icon = Icons.screen_rotation;
     } else {
       text =
-          "Rotate the phone ${relativeAngle.abs().toStringAsFixed(0)}° to the left";
+          "${"Rotate the phone ".tr}${relativeAngle.abs().toStringAsFixed(0)}°${" to the left".tr}";
       icon = Icons.screen_rotation;
     }
 
@@ -247,12 +248,13 @@ class QiblahCompassWidget extends StatelessWidget {
   }
 
   Widget _buildInstructions() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 40),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40),
       child: Text(
-        "Align both arrow head\nDo not put device close to metal object.\nCalibrate the compass everytime you use it.",
+        "Align both arrow head\nDo not put device close to metal object.\nCalibrate the compass everytime you use it."
+            .tr,
         textAlign: TextAlign.center,
-        style: TextStyle(
+        style: const TextStyle(
           color: AppColors.activeGreen12,
           fontSize: 12,
           height: 1.6,

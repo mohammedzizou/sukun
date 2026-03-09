@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ProfileAppearanceSelector extends StatelessWidget {
   final bool isDarkMode;
@@ -44,7 +45,7 @@ class ProfileAppearanceSelector extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Dark Emerald',
+                    'Dark Emerald'.tr,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: isDarkMode
@@ -56,10 +57,10 @@ class ProfileAppearanceSelector extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 2),
-                  const Text(
-                    'Peaceful night mode',
+                  Text(
+                    'Peaceful night mode'.tr,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color(0x59A3F7BF),
                       fontSize: 10,
                       fontFamily: 'Inter',
@@ -114,7 +115,7 @@ class ProfileAppearanceSelector extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Light Mode',
+                    'Light Mode'.tr,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: !isDarkMode
@@ -126,10 +127,10 @@ class ProfileAppearanceSelector extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 2),
-                  const Text(
-                    'Bright and airy',
+                  Text(
+                    'Bright and airy'.tr,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color(0x59A3F7BF),
                       fontSize: 10,
                       fontFamily: 'Inter',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sukun/core/constants/images.dart';
 import 'package:sukun/core/constants/theme_data.dart';
@@ -68,7 +69,7 @@ class PrayerCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  englishName,
+                  englishName.tr,
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.80),
                     fontSize: 16,
@@ -97,9 +98,9 @@ class PrayerCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Center(
-                child: const Text(
-                  'NEXT',
-                  style: TextStyle(
+                child: Text(
+                  'NEXT'.tr,
+                  style: const TextStyle(
                     color: AppColors.activeGreen,
                     fontSize: 10,
                     fontWeight: FontWeight.bold,

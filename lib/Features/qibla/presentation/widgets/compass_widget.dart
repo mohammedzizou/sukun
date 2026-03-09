@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sukun/core/constants/theme_data.dart';
 import 'dart:math' as math;
@@ -149,7 +150,7 @@ class CompassWidget extends StatelessWidget {
     return Transform.translate(
       offset: Offset(offset * math.sin(rad), -offset * math.cos(rad)),
       child: Text(
-        label,
+        label.tr,
         style: TextStyle(
           color: color.withValues(alpha: 0.8),
           fontWeight: FontWeight.bold,

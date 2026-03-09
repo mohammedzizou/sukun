@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sukun/core/constants/images.dart';
 
@@ -95,7 +96,7 @@ class OnboardingPageWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32),
                     child: Text(
-                      data.title,
+                      data.title.tr,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: Colors.white,
@@ -111,7 +112,7 @@ class OnboardingPageWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 46),
                     child: Text(
-                      data.subtitle,
+                      data.subtitle.tr,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: Color(0xA5A3F7BF),
@@ -142,7 +143,7 @@ class OnboardingPageWidget extends StatelessWidget {
         ),
       ),
       child: Text(
-        data.tag,
+        data.tag.tr,
         style: const TextStyle(
           color: Color(0xFF2ECC71),
           fontSize: 12,

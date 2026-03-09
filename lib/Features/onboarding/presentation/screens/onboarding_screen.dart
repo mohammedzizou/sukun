@@ -159,11 +159,11 @@ class _OnboardingViewState extends State<_OnboardingView>
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
-                              child: const Center(
+                              child: Center(
                                 child: Text(
-                                  'Skip',
+                                  'Skip'.tr,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Color(0xB2A3F7BF),
                                     fontSize: 13,
                                     fontFamily: 'Inter',
@@ -253,7 +253,7 @@ class _OnboardingViewState extends State<_OnboardingView>
               transitionBuilder: (child, animation) =>
                   FadeTransition(opacity: animation, child: child),
               child: Text(
-                label,
+                label.tr,
                 key: ValueKey<String>(label),
                 textAlign: TextAlign.center,
                 style: const TextStyle(

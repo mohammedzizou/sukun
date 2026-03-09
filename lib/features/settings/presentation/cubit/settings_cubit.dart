@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sukun/core/di/dipendency_injection.dart';
 import 'package:sukun/core/local_data/daos/locations_dao.dart';
@@ -28,7 +30,7 @@ class SettingsCubit extends Cubit<SettingsState> {
 
     emit(
       state.copyWith(
-        language: _appPreferences.getLanguage(),
+        languageCode: _appPreferences.getLanguageCode(),
         themeMode: _appPreferences.getThemeMode(),
         restoreSound: _appPreferences.getRestoreSound(),
         vibrateInstead: _appPreferences.getVibrateInstead(),
@@ -40,9 +42,17 @@ class SettingsCubit extends Cubit<SettingsState> {
     );
   }
 
-  Future<void> setLanguage(String language) async {
-    await _appPreferences.setLanguage(language);
-    emit(state.copyWith(language: language));
+  Future<void> setLanguage(String displayName) async {
+    String code = displayName == 'Arabic'.tr || displayName == 'Arabic'
+        ? 'ar'
+        : 'en';
+    await _appPreferences.setLanguage(
+      displayName == 'Arabic'.tr || displayName == 'Arabic'
+          ? 'Arabic'
+          : 'English',
+    );
+    Get.updateLocale(Locale(code));
+    emit(state.copyWith(languageCode: code));
   }
 
   Future<void> setThemeMode(String mode) async {
