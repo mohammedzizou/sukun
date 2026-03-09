@@ -116,10 +116,16 @@ class HomeCubit extends Cubit<HomeState> {
         prayerTimes,
       ) async {
         final hasPermission = await silenceService.hasDndPermission();
+        final hasBatteryOptimizationPermission = await silenceService
+            .hasBatteryOptimizationPermission();
+        final hasExactAlarmPermission = await silenceService
+            .hasExactAlarmPermission();
         final loadedState = _createLoadedState(
           rawPrayerTimes: prayerTimes,
           location: location,
           hasDndPermission: hasPermission,
+          hasBatteryOptimizationPermission: hasBatteryOptimizationPermission,
+          hasExactAlarmPermission: hasExactAlarmPermission,
         );
         emit(loadedState);
         _updateNextPrayer(loadedState.prayerTimes);
@@ -207,10 +213,16 @@ class HomeCubit extends Cubit<HomeState> {
       prayerTimes,
     ) async {
       final hasPermission = await silenceService.hasDndPermission();
+      final hasBatteryOptimizationPermission = await silenceService
+          .hasBatteryOptimizationPermission();
+      final hasExactAlarmPermission = await silenceService
+          .hasExactAlarmPermission();
       final loadedState = _createLoadedState(
         rawPrayerTimes: prayerTimes,
         location: location,
         hasDndPermission: hasPermission,
+        hasBatteryOptimizationPermission: hasBatteryOptimizationPermission,
+        hasExactAlarmPermission: hasExactAlarmPermission,
       );
       emit(loadedState);
       _updateNextPrayer(loadedState.prayerTimes);
@@ -294,8 +306,34 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future<void> requestDndPermission() async {
     await silenceService.requestDndPermission();
+    await checkPermissions();
+  }
+
+  Future<void> requestBatteryOptimizationPermission() async {
+    await silenceService.requestBatteryOptimizationPermission();
+    await checkPermissions();
+  }
+
+  Future<void> requestExactAlarmPermission() async {
+    await silenceService.requestExactAlarmPermission();
+    await checkPermissions();
+  }
+
+  Future<void> checkPermissions() async {
     if (state is HomeLoaded) {
-      emit((state as HomeLoaded).copyWith(hasDndPermission: true));
+      final currentLoaded = state as HomeLoaded;
+      final hasPermission = await silenceService.hasDndPermission();
+      final hasBatteryOptimizationPermission = await silenceService
+          .hasBatteryOptimizationPermission();
+      final hasExactAlarmPermission = await silenceService
+          .hasExactAlarmPermission();
+      emit(
+        currentLoaded.copyWith(
+          hasDndPermission: hasPermission,
+          hasBatteryOptimizationPermission: hasBatteryOptimizationPermission,
+          hasExactAlarmPermission: hasExactAlarmPermission,
+        ),
+      );
     }
   }
 
@@ -404,11 +442,15 @@ class HomeCubit extends Cubit<HomeState> {
     required DailyPrayerTimesEntity rawPrayerTimes,
     AppLocation? location,
     bool hasDndPermission = false,
+    bool hasBatteryOptimizationPermission = false,
+    bool hasExactAlarmPermission = false,
   }) {
     return HomeLoaded(
       prayerTimes: _enrichWithSilenceState(rawPrayerTimes),
       location: location,
       hasDndPermission: hasDndPermission,
+      hasBatteryOptimizationPermission: hasBatteryOptimizationPermission,
+      hasExactAlarmPermission: hasExactAlarmPermission,
       silenceBefore: appPreferences.getSilenceBefore(),
       silenceAfter: appPreferences.getSilenceAfter(),
       jumuahEnabled: appPreferences.getJumuahEnabled(),

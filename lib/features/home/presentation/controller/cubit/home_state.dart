@@ -19,6 +19,8 @@ class HomeLoaded extends HomeState {
   final AppLocation? location;
   final bool isAutoSilentEnabled;
   final bool hasDndPermission;
+  final bool hasBatteryOptimizationPermission;
+  final bool hasExactAlarmPermission;
   // New Silence Settings
   final int silenceBefore;
   final int silenceAfter;
@@ -35,6 +37,8 @@ class HomeLoaded extends HomeState {
     this.location,
     this.isAutoSilentEnabled = false,
     this.hasDndPermission = false,
+    this.hasBatteryOptimizationPermission = false,
+    this.hasExactAlarmPermission = false,
     this.silenceBefore = 5,
     this.silenceAfter = 15,
     this.jumuahEnabled = false,
@@ -52,6 +56,8 @@ class HomeLoaded extends HomeState {
     location,
     isAutoSilentEnabled,
     hasDndPermission,
+    hasBatteryOptimizationPermission,
+    hasExactAlarmPermission,
     silenceBefore,
     silenceAfter,
     jumuahEnabled,
@@ -68,6 +74,8 @@ class HomeLoaded extends HomeState {
     AppLocation? location,
     bool? isAutoSilentEnabled,
     bool? hasDndPermission,
+    bool? hasBatteryOptimizationPermission,
+    bool? hasExactAlarmPermission,
     int? silenceBefore,
     int? silenceAfter,
     bool? jumuahEnabled,
@@ -83,6 +91,11 @@ class HomeLoaded extends HomeState {
       location: location ?? this.location,
       isAutoSilentEnabled: isAutoSilentEnabled ?? this.isAutoSilentEnabled,
       hasDndPermission: hasDndPermission ?? this.hasDndPermission,
+      hasBatteryOptimizationPermission:
+          hasBatteryOptimizationPermission ??
+          this.hasBatteryOptimizationPermission,
+      hasExactAlarmPermission:
+          hasExactAlarmPermission ?? this.hasExactAlarmPermission,
       silenceBefore: silenceBefore ?? this.silenceBefore,
       silenceAfter: silenceAfter ?? this.silenceAfter,
       jumuahEnabled: jumuahEnabled ?? this.jumuahEnabled,

@@ -10,13 +10,40 @@ import 'package:sukun/core/constants/theme_data.dart';
 import 'package:sukun/core/widgets/app_switch.dart';
 import 'package:sukun/core/di/dipendency_injection.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+  late final HomeCubit _cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit = getIt<HomeCubit>()..initHome();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _cubit.checkPermissions();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<HomeCubit>()..initHome(),
+    return BlocProvider.value(
+      value: _cubit,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: BlocBuilder<HomeCubit, HomeState>(
@@ -439,13 +466,23 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildPermissionRequired(BuildContext context, HomeLoaded state) {
-    if (Platform.isIOS || state.hasDndPermission) {
+    if (Platform.isIOS) {
+      return const SizedBox.shrink();
+    }
+
+    final missingPermissions = <String>[];
+    if (!state.hasDndPermission) missingPermissions.add('Do Not Disturb');
+    if (!state.hasBatteryOptimizationPermission) {
+      missingPermissions.add('Battery Optimization');
+    }
+    if (!state.hasExactAlarmPermission) missingPermissions.add('Exact Alarms');
+
+    if (missingPermissions.isEmpty) {
       return const SizedBox.shrink();
     }
 
     return Container(
-      height: 90.54,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: ShapeDecoration(
         color: AppColors.gold05,
         shape: RoundedRectangleBorder(
@@ -453,68 +490,107 @@ class HomeScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
         ),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: ShapeDecoration(
-              color: AppColors.gold12,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child: const Icon(
-              Icons.shield_outlined,
-              color: AppColors.gold80, // yellow/gold
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 16),
-          const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Permission Required',
-                  style: TextStyle(
-                    color: AppColors.goldLight,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+          Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: ShapeDecoration(
+                  color: AppColors.gold12,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                SizedBox(height: 2),
-                Text(
-                  'Grant Do Not Disturb access to enable auto-silent',
-                  style: TextStyle(color: AppColors.gold60, fontSize: 12),
+                child: const Icon(
+                  Icons.shield_outlined,
+                  color: AppColors.gold80, // yellow/gold
+                  size: 20,
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 16),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Permissions Required',
+                      style: TextStyle(
+                        color: AppColors.goldLight,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      'Please grant all for auto-silent mode to work reliably in background',
+                      style: TextStyle(color: AppColors.gold60, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 12),
+          const SizedBox(height: 12),
+          if (!state.hasDndPermission)
+            _buildPermissionRow(
+              context,
+              'Do Not Disturb',
+              () => context.read<HomeCubit>().requestDndPermission(),
+            ),
+          if (!state.hasBatteryOptimizationPermission)
+            _buildPermissionRow(
+              context,
+              'Battery Optimization',
+              () => context
+                  .read<HomeCubit>()
+                  .requestBatteryOptimizationPermission(),
+            ),
+          if (!state.hasExactAlarmPermission)
+            _buildPermissionRow(
+              context,
+              'Exact Alarms',
+              () => context.read<HomeCubit>().requestExactAlarmPermission(),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPermissionRow(
+    BuildContext context,
+    String title,
+    VoidCallback onTap,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0, left: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            '• $title',
+            style: const TextStyle(color: AppColors.gold60, fontSize: 13),
+          ),
           GestureDetector(
-            onTap: () {
-              context.read<HomeCubit>().requestDndPermission();
-            },
+            onTap: onTap,
             child: Container(
-              width: 64.25,
-              height: 31.03,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: ShapeDecoration(
                 color: AppColors.gold15,
                 shape: RoundedRectangleBorder(
                   side: const BorderSide(width: 0.52, color: AppColors.gold25),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Center(
-                child: Text(
-                  'Enable',
-                  style: TextStyle(
-                    color: AppColors.goldLight,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
+              child: const Text(
+                'Enable',
+                style: TextStyle(
+                  color: AppColors.goldLight,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),

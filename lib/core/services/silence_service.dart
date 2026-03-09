@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:sound_mode/sound_mode.dart';
+import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:sound_mode/permission_handler.dart';
 import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
@@ -21,6 +22,33 @@ class SilenceService {
       await PermissionHandler.openDoNotDisturbSetting();
     }
     // For iOS, we typically show instructions to set up a Focus mode automation.
+  }
+
+  Future<bool> hasBatteryOptimizationPermission() async {
+    if (Platform.isAndroid) {
+      return await ph.Permission.ignoreBatteryOptimizations.isGranted;
+    }
+    return true; // Not applicable for iOS in this context
+  }
+
+  Future<void> requestBatteryOptimizationPermission() async {
+    if (Platform.isAndroid) {
+      await ph.Permission.ignoreBatteryOptimizations.request();
+    }
+  }
+
+  Future<bool> hasExactAlarmPermission() async {
+    if (Platform.isAndroid) {
+      return await ph.Permission.scheduleExactAlarm.isGranted;
+    }
+    return true; // Not applicable for iOS
+  }
+
+  Future<void> requestExactAlarmPermission() async {
+    if (Platform.isAndroid) {
+      // Directs the user to the exact alarm settings page for the app
+      await ph.Permission.scheduleExactAlarm.request();
+    }
   }
 
   /// Sets the device to Do Not Disturb / Silent Mode.
