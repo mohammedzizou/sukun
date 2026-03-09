@@ -22,6 +22,35 @@ class PrayerRepositoryImpl implements PrayerRepository {
     required this.appPreferences,
   });
 
+  int _getCalculationMethodId(String method) {
+    switch (method) {
+      case 'Muslim World League':
+        return 3;
+      case 'Egyptian General Authority':
+        return 2;
+      case 'University of Islamic Sciences, Karachi':
+        return 1;
+      case 'Islamic Society of North America':
+        return 4;
+      case 'Umm Al-Qura, Makkah':
+        return 0;
+      case 'Dubai':
+        return 5;
+      case 'Qatar':
+        return 6;
+      case 'Singapore':
+        return 7;
+      case 'France':
+        return 8;
+      case 'Turkey':
+        return 9;
+      case 'Tunisia':
+        return 10;
+      default:
+        return 3;
+    }
+  }
+
   @override
   Future<Either<Faileur, DailyPrayerTimesEntity>> getPrayerTimes({
     required String city,
@@ -40,9 +69,12 @@ class PrayerRepositoryImpl implements PrayerRepository {
           localPrayerTimes.date.day == date.day;
       final isSameLocation =
           localPrayerTimes.city == city && localPrayerTimes.country == country;
+      final method = appPreferences.getCalculationMethod();
+      final methodId = _getCalculationMethodId(method);
+      final isSameMethod = localPrayerTimes.calculationMethod == methodId;
 
-      if (isSameDay && isSameLocation) {
-        // Return cached for same day/location, update in background
+      if (isSameDay && isSameLocation && isSameMethod) {
+        // Return cached for same day/location/method, update in background
         _updateCacheInBackground(
           city: city,
           country: country,
@@ -95,6 +127,7 @@ class PrayerRepositoryImpl implements PrayerRepository {
       city: model.city,
       country: model.country,
       prayers: updatedPrayers,
+      calculationMethod: model.calculationMethod,
     );
   }
 

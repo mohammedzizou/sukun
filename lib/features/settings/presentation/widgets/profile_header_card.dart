@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 
 class ProfileHeaderCard extends StatelessWidget {
-  const ProfileHeaderCard({super.key});
+  final String city;
+  final String country;
+  final bool isAutoLocation;
+
+  const ProfileHeaderCard({
+    super.key,
+    required this.city,
+    required this.country,
+    required this.isAutoLocation,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
+      // ... (rest of the decoration)
       decoration: ShapeDecoration(
         gradient: const LinearGradient(
           begin: Alignment(0.00, 0.00),
@@ -51,7 +61,7 @@ class ProfileHeaderCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Salah Silent',
+                  'Salah Silent User',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -61,19 +71,19 @@ class ProfileHeaderCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 2),
-                const Row(
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.location_on_outlined,
                       color: Color(0xFF2ECC71),
                       size: 14,
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Expanded(
                       child: Text(
-                        'Mecca, Saudi Arabia',
-                        style: TextStyle(
+                        '$city, $country',
+                        style: const TextStyle(
                           color: Color(0xFF2ECC71),
                           fontSize: 13,
                           fontFamily: 'Inter',
@@ -84,9 +94,11 @@ class ProfileHeaderCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 2),
-                const Text(
-                  'Auto-detected via GPS',
-                  style: TextStyle(
+                Text(
+                  isAutoLocation
+                      ? 'Auto-detected via GPS'
+                      : 'Manually set location',
+                  style: const TextStyle(
                     color: Color(0x72A3F7BF),
                     fontSize: 11,
                     fontFamily: 'Inter',

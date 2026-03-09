@@ -7,13 +7,14 @@ class DailyPrayerTimesModel extends DailyPrayerTimesEntity {
     required super.date,
     required super.city,
     required super.country,
-    required super.prayers,
+    required super.prayers,required this.calculationMethod,
   });
-
+  final int calculationMethod;
   factory DailyPrayerTimesModel.fromAdhan(
     PrayerTimes prayerTimes,
     String city,
     String country,
+    int method,
   ) {
     final DateFormat formatter = DateFormat('h:mm a');
 
@@ -61,6 +62,7 @@ class DailyPrayerTimesModel extends DailyPrayerTimesEntity {
       city: city,
       country: country,
       prayers: prayers,
+      calculationMethod: method,
     );
   }
 
@@ -68,6 +70,7 @@ class DailyPrayerTimesModel extends DailyPrayerTimesEntity {
     Map<String, dynamic> json,
     String city,
     String country,
+    int method,
   ) {
     final timings = json['timings'] as Map<String, dynamic>;
 
@@ -112,6 +115,7 @@ class DailyPrayerTimesModel extends DailyPrayerTimesEntity {
       city: city,
       country: country,
       prayers: prayers,
+      calculationMethod: method,
     );
   }
 
@@ -120,6 +124,7 @@ class DailyPrayerTimesModel extends DailyPrayerTimesEntity {
       'city': city,
       'country': country,
       'timestamp': date.millisecondsSinceEpoch ~/ 1000,
+      'calculation_method': calculationMethod,
       'prayers': prayers
           .map(
             (p) => {
@@ -139,6 +144,7 @@ class DailyPrayerTimesModel extends DailyPrayerTimesEntity {
       date: DateTime.fromMillisecondsSinceEpoch(json['timestamp'] * 1000),
       city: json['city'],
       country: json['country'],
+      calculationMethod: json['calculation_method'] ?? 3,
       prayers: (json['prayers'] as List)
           .map(
             (p) => PrayerTimeEntity(

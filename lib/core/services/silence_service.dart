@@ -51,18 +51,21 @@ class SilenceService {
     }
   }
 
-  /// Sets the device to Do Not Disturb / Silent Mode.
-  Future<void> setSilentMode() async {
+  /// Sets the device to Do Not Disturb / Silent Mode or Vibrate.
+  Future<void> setSilentMode({bool vibrate = false}) async {
     if (Platform.isAndroid) {
       final hasPermission = await hasDndPermission();
       if (hasPermission) {
-        await SoundMode.setSoundMode(RingerModeStatus.silent);
+        await SoundMode.setSoundMode(
+          vibrate ? RingerModeStatus.vibrate : RingerModeStatus.silent,
+        );
       }
     }
   }
 
-  /// Alias for setSilentMode as requested
-  Future<void> enableSilentMode() => setSilentMode();
+  /// Alias for setSilentMode
+  Future<void> enableSilentMode({bool vibrate = false}) =>
+      setSilentMode(vibrate: vibrate);
 
   /// Restores the device to standard Ringing/Normal Mode.
   Future<void> restoreNormalMode() async {

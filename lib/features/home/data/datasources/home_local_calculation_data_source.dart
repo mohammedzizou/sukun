@@ -25,9 +25,46 @@ class HomeLocalCalculationDataSourceImpl
   }) async {
     final coordinates = Coordinates(latitude, longitude);
 
-    // Defaulting to Muslim World League (MWL) as it's commonly used in Algeria
-    // In the future, this can be retrieved from settings
-    final params = CalculationMethodParameters.muslimWorldLeague();
+    var params;
+    int methodId = 3; // Default MWL
+
+    switch (calculationMethod) {
+      case 'Muslim World League':
+        params = CalculationMethodParameters.muslimWorldLeague();
+        methodId = 3;
+        break;
+      case 'Egyptian General Authority':
+        params = CalculationMethodParameters.egyptian();
+        methodId = 2;
+        break;
+      case 'University of Islamic Sciences, Karachi':
+        params = CalculationMethodParameters.karachi();
+        methodId = 1;
+        break;
+      case 'Islamic Society of North America':
+        params = CalculationMethodParameters.northAmerica();
+        methodId = 4;
+        break;
+      case 'Umm Al-Qura, Makkah':
+        params = CalculationMethodParameters.ummAlQura();
+        methodId = 0;
+        break;
+      case 'Dubai':
+        params = CalculationMethodParameters.dubai();
+        methodId = 5;
+        break;
+      case 'Qatar':
+        params = CalculationMethodParameters.qatar();
+        methodId = 6;
+        break;
+      case 'Singapore':
+        params = CalculationMethodParameters.singapore();
+        methodId = 7;
+        break;
+      default:
+        params = CalculationMethodParameters.muslimWorldLeague();
+        methodId = 3;
+    }
 
     params.madhab = Madhab.shafi;
 
@@ -38,6 +75,11 @@ class HomeLocalCalculationDataSourceImpl
       precision: true,
     );
 
-    return DailyPrayerTimesModel.fromAdhan(prayerTimes, city, country);
+    return DailyPrayerTimesModel.fromAdhan(
+      prayerTimes,
+      city,
+      country,
+      methodId,
+    );
   }
 }

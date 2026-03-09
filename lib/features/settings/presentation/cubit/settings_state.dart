@@ -9,6 +9,8 @@ class SettingsState extends Equatable {
   final bool autoDetectLocation;
   final String city;
   final String country;
+  final int silenceBefore;
+  final int silenceAfter;
 
   const SettingsState({
     this.language = 'English',
@@ -19,6 +21,8 @@ class SettingsState extends Equatable {
     this.autoDetectLocation = true,
     this.city = 'Mecca',
     this.country = 'Saudi Arabia',
+    this.silenceBefore = 5,
+    this.silenceAfter = 15,
   });
 
   SettingsState copyWith({
@@ -30,6 +34,8 @@ class SettingsState extends Equatable {
     bool? autoDetectLocation,
     String? city,
     String? country,
+    int? silenceBefore,
+    int? silenceAfter,
   }) {
     return SettingsState(
       language: language ?? this.language,
@@ -40,6 +46,8 @@ class SettingsState extends Equatable {
       autoDetectLocation: autoDetectLocation ?? this.autoDetectLocation,
       city: city ?? this.city,
       country: country ?? this.country,
+      silenceBefore: silenceBefore ?? this.silenceBefore,
+      silenceAfter: silenceAfter ?? this.silenceAfter,
     );
   }
 
@@ -53,5 +61,7 @@ class SettingsState extends Equatable {
     autoDetectLocation,
     city,
     country,
+    silenceBefore,
+    silenceAfter,
   ];
 }

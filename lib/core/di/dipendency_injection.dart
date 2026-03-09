@@ -93,7 +93,7 @@ Future initApp() async {
   );
 
   // Blocs/Cubits
-  getIt.registerFactory(
+  getIt.registerLazySingleton<HomeCubit>(
     () => HomeCubit(
       getPrayerTimesUseCase: getIt<GetPrayerTimesUseCase>(),
       locationService: getIt<LocationService>(),
@@ -107,6 +107,10 @@ Future initApp() async {
 
   // --- Settings Feature ---
   getIt.registerFactory(
-    () => SettingsCubit(appPreferences: getIt<AppPreferences>()),
+    () => SettingsCubit(
+      appPreferences: getIt<AppPreferences>(),
+      locationsDao: getIt<LocationsDao>(),
+      userSettingsDao: getIt<UserSettingsDao>(),
+    ),
   );
 }

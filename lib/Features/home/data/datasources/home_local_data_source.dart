@@ -41,10 +41,9 @@ class HomeLocalDataSourceImpl implements HomeLocalDataSource {
       asr: getPrayerTimeStr('Asr'),
       maghrib: getPrayerTimeStr('Maghrib'),
       isha: getPrayerTimeStr('Isha'),
-      latitude:
-          0.0, // Should we pass proper coordinates? The model doesn't store lat/long currently.
+      latitude: 0.0,
       longitude: 0.0,
-      calculationMethod: 3,
+      calculationMethod: prayerTimes.calculationMethod,
     );
   }
 
@@ -98,6 +97,7 @@ class HomeLocalDataSourceImpl implements HomeLocalDataSource {
         city: 'Local',
         country: 'Local',
         prayers: prayers,
+        calculationMethod: data['calculation_method'] ?? 3,
       );
     }
     return null;

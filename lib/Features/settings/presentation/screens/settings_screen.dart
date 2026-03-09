@@ -70,7 +70,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 28),
 
                     // 1. Profile Header Section
-                    const ProfileHeaderCard(),
+                    ProfileHeaderCard(
+                      city: state.city,
+                      country: state.country,
+                      isAutoLocation: state.autoDetectLocation,
+                    ),
                     const SizedBox(height: 24),
 
                     // 2. Appearance Section
@@ -133,7 +137,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           title: 'Vibrate instead of silent',
                           subtitle: 'Phone will vibrate during prayer',
                           value: state.vibrateInstead,
-                          showDivider: false,
                           onChanged: (val) => _cubit.setVibrateInstead(val),
                         ),
                       ],

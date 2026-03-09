@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:intl/intl.dart';
@@ -10,56 +11,57 @@ import 'silence_service.dart';
 import 'dart:developer' as dev;
 import 'package:flutter/widgets.dart';
 
-// --- Top Level Functions for Android Alarm Manager ---
-
-Future<void> _logBackground(String message) async {
-  try {
-    final prefs = await SharedPreferences.getInstance();
-    final currentLogs = prefs.getStringList('bg_logs') ?? [];
-    final timestamp = DateTime.now().toIso8601String().split('.')[0];
-    currentLogs.add('[$timestamp] $message');
-    await prefs.setStringList('bg_logs', currentLogs);
-    debugPrint('BG_LOG: $message');
-  } catch (e) {
-    debugPrint('Error logging: $e');
-  }
-}
-
 @pragma('vm:entry-point')
 Future<void> muteDeviceCallback() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await _logBackground("muteDeviceCallback fired!");
+  log("muteDeviceCallback fired!");
   try {
+    final prefs = await SharedPreferences.getInstance();
+    final appPrefs = AppPreferences(prefs);
+    final vibrateInstead = appPrefs.getVibrateInstead();
+
     final silenceService = SilenceService();
-    await silenceService.setSilentMode();
-    await _logBackground("Successfully muted device.");
+    await silenceService.setSilentMode(vibrate: vibrateInstead);
+    log(
+      vibrateInstead
+          ? "Successfully set device to vibrate."
+          : "Successfully muted device.",
+    );
 
     // Log to DB
     final logsDao = SilentLogsDao();
-    await logsDao.logSilentEvent(
+    logsDao.logSilentEvent(
       date: DateTime.now(),
       prayerName: 'Scheduled Event',
       actualStart: DateTime.now(),
-      triggerType: 'scheduled',
+      triggerType: vibrateInstead ? 'scheduled_vibrate' : 'scheduled_mute',
       status: 'success',
     );
   } catch (e) {
-    await _logBackground("Error muting: $e");
+    log("Error muting: $e");
   }
 }
 
 @pragma('vm:entry-point')
 Future<void> unmuteDeviceCallback() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await _logBackground("unmuteDeviceCallback fired!");
+  log("unmuteDeviceCallback fired!");
   try {
-    final silenceService = SilenceService();
-    await silenceService.restoreNormalMode();
-    await _logBackground("Successfully unmuted device.");
+    final prefs = await SharedPreferences.getInstance();
+    final appPrefs = AppPreferences(prefs);
+    final restoreSound = appPrefs.getRestoreSound();
+
+    if (restoreSound) {
+      final silenceService = SilenceService();
+      await silenceService.restoreNormalMode();
+      log("Successfully restored normal mode.");
+    } else {
+      log("Skipping sound restoration as per settings.");
+    }
 
     // Log to DB
     final logsDao = SilentLogsDao();
-    await logsDao.logSilentEvent(
+    logsDao.logSilentEvent(
       date: DateTime.now(),
       prayerName: 'Scheduled Event',
       actualStart: DateTime.now(),
@@ -67,7 +69,7 @@ Future<void> unmuteDeviceCallback() async {
       status: 'success',
     );
   } catch (e) {
-    await _logBackground("Error unmuting: $e");
+    log("Error unmuting: $e");
   }
 }
 
@@ -109,7 +111,7 @@ class BackgroundAlarmService {
       if (isFriday &&
           appPreferences.getJumuahEnabled() &&
           prayer.name.toLowerCase() == 'dhuhr') {
-        _logBackground("Scheduling Jumu'ah Khutba override for Dhuhr");
+        log("Scheduling Jumu'ah Khutba override for Dhuhr");
         try {
           final khutbaTimeStr = appPreferences.getJumuahKhutbaTime();
           final khutbaTime = DateFormat('HH:mm').parse(khutbaTimeStr);
@@ -149,7 +151,7 @@ class BackgroundAlarmService {
           alarmId++;
           continue; // Skip normal Dhuhr
         } catch (e) {
-          _logBackground("Error scheduling Jumu'ah: $e");
+          log("Error scheduling Jumu'ah: $e");
         }
       }
 
@@ -181,9 +183,7 @@ class BackgroundAlarmService {
         if (appPreferences.getRamadanEnabled() &&
             prayer.name.toLowerCase() == 'isha') {
           currentSilenceAfter += appPreferences.getTarawihSilenceDuration();
-          _logBackground(
-            "Extended Isha silence for Tarawih: $currentSilenceAfter min",
-          );
+          log("Extended Isha silence for Tarawih: $currentSilenceAfter min");
         }
 
         // 1. Schedule the Mute Alarm
@@ -209,7 +209,7 @@ class BackgroundAlarmService {
 
         alarmId++;
       } catch (e) {
-        _logBackground("Error scheduling prayer $prayer: $e");
+        log("Error scheduling prayer $prayer: $e");
       }
     }
   }
