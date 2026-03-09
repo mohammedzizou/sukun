@@ -3,11 +3,20 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sukun/core/constants/route.dart';
 import 'package:sukun/core/di/dipendency_injection.dart';
+import 'package:sukun/core/services/workmanager_service.dart';
+import 'package:sukun/core/services/alarm_scheduler_service.dart';
 import 'package:sukun/core/util/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initApp();
+
+  // Schedule background maintenance tasks
+  await WorkManagerService.scheduleDailyTasks();
+
+  // Schedule initial prayer alarms
+  await getIt<AlarmSchedulerService>().schedulePrayerAlarms();
+
   runApp(const MyApp());
 }
 

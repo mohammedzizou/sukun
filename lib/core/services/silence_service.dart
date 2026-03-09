@@ -61,6 +61,9 @@ class SilenceService {
     }
   }
 
+  /// Alias for setSilentMode as requested
+  Future<void> enableSilentMode() => setSilentMode();
+
   /// Restores the device to standard Ringing/Normal Mode.
   Future<void> restoreNormalMode() async {
     if (Platform.isAndroid) {
@@ -70,4 +73,7 @@ class SilenceService {
       }
     }
   }
+
+  /// Alias for restoreNormalMode as requested
+  Future<void> disableSilentMode() => restoreNormalMode();
 }
