@@ -677,4 +677,20 @@ class HomeCubit extends Cubit<HomeState> {
       await _rescheduleAlarms(newState);
     }
   }
+
+  Future<void> runSilenceTest() async {
+    if (state is HomeLoaded) {
+      final currentState = state as HomeLoaded;
+      emit(currentState.copyWith(isTestScheduled: true));
+
+      await backgroundAlarmService.testSilenceScheduling();
+
+      // Reset the state after 45 seconds (test lasts 15s delay + 15s duration + buffer)
+      Future.delayed(const Duration(seconds: 45), () {
+        if (!isClosed && state is HomeLoaded) {
+          emit((state as HomeLoaded).copyWith(isTestScheduled: false));
+        }
+      });
+    }
+  }
 }

@@ -30,6 +30,7 @@ class HomeLoaded extends HomeState {
   final int jumuahSilenceDuration;
   final bool ramadanEnabled;
   final int tarawihSilenceDuration;
+  final bool isTestScheduled;
 
   const HomeLoaded({
     required this.prayerTimes,
@@ -48,6 +49,7 @@ class HomeLoaded extends HomeState {
     this.jumuahSilenceDuration = 45,
     this.ramadanEnabled = false,
     this.tarawihSilenceDuration = 90,
+    this.isTestScheduled = false,
   });
 
   @override
@@ -68,6 +70,7 @@ class HomeLoaded extends HomeState {
     jumuahSilenceDuration,
     ramadanEnabled,
     tarawihSilenceDuration,
+    isTestScheduled,
   ];
 
   HomeLoaded copyWith({
@@ -87,6 +90,7 @@ class HomeLoaded extends HomeState {
     int? jumuahSilenceDuration,
     bool? ramadanEnabled,
     int? tarawihSilenceDuration,
+    bool? isTestScheduled,
   }) {
     return HomeLoaded(
       prayerTimes: prayerTimes ?? this.prayerTimes,
@@ -111,6 +115,7 @@ class HomeLoaded extends HomeState {
       ramadanEnabled: ramadanEnabled ?? this.ramadanEnabled,
       tarawihSilenceDuration:
           tarawihSilenceDuration ?? this.tarawihSilenceDuration,
+      isTestScheduled: isTestScheduled ?? this.isTestScheduled,
     );
   }
 }

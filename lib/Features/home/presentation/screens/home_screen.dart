@@ -146,6 +146,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             _buildJumuahSection(context, state),
             const SizedBox(height: 24),
             _buildRamadanSection(context, state),
+            const SizedBox(height: 32),
+            _buildDebugTools(context, state),
           ],
         ),
       ),
@@ -865,6 +867,73 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDebugTools(BuildContext context, HomeLoaded state) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle('Debug & Tools'),
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceDark,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: state.isTestScheduled
+                  ? AppColors.activeGreen.withValues(alpha: 0.3)
+                  : Colors.white.withValues(alpha: 0.05),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Background Service Test',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'Schedule a 30s test (15s delay + 15s duration) to verify silent mode works in background.',
+                style: TextStyle(color: AppColors.mint50, fontSize: 12),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: state.isTestScheduled
+                      ? null
+                      : () => context.read<HomeCubit>().runSilenceTest(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.activeGreen12,
+                    foregroundColor: AppColors.activeGreen,
+                    disabledBackgroundColor: AppColors.surfaceDark,
+                    side: BorderSide(
+                      color: state.isTestScheduled
+                          ? AppColors.mint10
+                          : AppColors.activeGreen28,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    state.isTestScheduled
+                        ? 'Test Scheduled (Wait 45s...)'
+                        : 'Run Background Test',
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
