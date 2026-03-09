@@ -6,6 +6,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:intl/intl.dart';
 import 'package:sukun/features/home/domain/entities/prayer_time_entity.dart';
 import 'package:sukun/core/local_data/shared_preferences.dart';
+import 'package:get/get.dart';
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin _notificationsPlugin =
@@ -167,11 +168,21 @@ class NotificationService {
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-
       title: title,
       body: body,
-
       payload: payload,
+    );
+  }
+
+  Future<void> scheduleTestNotification(int seconds) async {
+    if (!Platform.isIOS) return;
+    final scheduledTime = DateTime.now().add(Duration(seconds: seconds));
+    await _scheduleNotification(
+      id: 999,
+      title: 'Test Notification'.tr,
+      body: 'This is a test notification fired after $seconds seconds.'.tr,
+      scheduledTime: scheduledTime,
+      payload: 'test_notification',
     );
   }
 

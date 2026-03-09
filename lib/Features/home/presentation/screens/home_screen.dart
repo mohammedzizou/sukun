@@ -945,6 +945,35 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   ),
                 ),
               ),
+              if (Platform.isIOS) ...[
+                SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: state.isTestScheduled
+                        ? null
+                        : () => context.read<HomeCubit>().runNotificationTest(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.activeGreen12,
+                      foregroundColor: AppColors.activeGreen,
+                      disabledBackgroundColor: AppColors.surfaceDark,
+                      side: BorderSide(
+                        color: state.isTestScheduled
+                            ? AppColors.mint10
+                            : AppColors.activeGreen28,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      state.isTestScheduled
+                          ? 'Notification Scheduled (30s)'.tr
+                          : 'Test Notification (30s)'.tr,
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ),

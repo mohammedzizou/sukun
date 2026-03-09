@@ -709,4 +709,20 @@ class HomeCubit extends Cubit<HomeState> {
       });
     }
   }
+
+  Future<void> runNotificationTest() async {
+    if (state is HomeLoaded) {
+      final currentState = state as HomeLoaded;
+      emit(currentState.copyWith(isTestScheduled: true));
+
+      await notificationService.scheduleTestNotification(30);
+
+      // Reset the state after 35 seconds
+      Future.delayed(const Duration(seconds: 35), () {
+        if (!isClosed && state is HomeLoaded) {
+          emit((state as HomeLoaded).copyWith(isTestScheduled: false));
+        }
+      });
+    }
+  }
 }
