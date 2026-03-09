@@ -88,6 +88,9 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(height: 24),
           _buildNextPrayerCard(state),
           const SizedBox(height: 32),
+
+          _buildPermissionRequired(context, state),
+          const SizedBox(height: 16),
           const Text(
             'TODAY\'S PRAYERS',
             style: TextStyle(
@@ -97,12 +100,12 @@ class HomeScreen extends StatelessWidget {
               letterSpacing: 1,
             ),
           ),
+
           const SizedBox(height: 16),
           _buildPrayerTimesList(context, state),
           const SizedBox(height: 16),
           _buildAutoSilentToggle(context, state),
-          const SizedBox(height: 16),
-          _buildPermissionRequired(context, state),
+
           const SizedBox(height: 32),
           _buildSectionTitle('Global Silence Settings'),
           const SizedBox(height: 8),
