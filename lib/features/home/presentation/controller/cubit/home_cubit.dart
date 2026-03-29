@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -694,9 +695,16 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  Future<void> runSilenceTest() async {
+  Future<bool> runSilenceTest() async {
     if (state is HomeLoaded) {
       final currentState = state as HomeLoaded;
+      
+      final currentMode = await silenceService.getCurrentRingerMode();
+      if (currentMode == RingerModeStatus.silent || 
+          currentMode == RingerModeStatus.vibrate) {
+        return false; // Already silenced
+      }
+
       emit(currentState.copyWith(isTestScheduled: true));
 
       await backgroundAlarmService.testSilenceScheduling();
@@ -707,7 +715,9 @@ class HomeCubit extends Cubit<HomeState> {
           emit((state as HomeLoaded).copyWith(isTestScheduled: false));
         }
       });
+      return true;
     }
+    return false;
   }
 
   Future<void> runNotificationTest() async {

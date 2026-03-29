@@ -10,6 +10,7 @@ import '../local_data/daos/prayer_times_dao.dart';
 import 'silence_service.dart';
 import 'dart:developer' as dev;
 import 'package:flutter/widgets.dart';
+import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
 @pragma('vm:entry-point')
 Future<void> muteDeviceCallback() async {
@@ -21,7 +22,30 @@ Future<void> muteDeviceCallback() async {
     final vibrateInstead = appPrefs.getVibrateInstead();
 
     final silenceService = SilenceService();
+    
+    // Check if phone is already silent
+    final currentMode = await silenceService.getCurrentRingerMode();
+    if (currentMode == RingerModeStatus.silent || 
+        currentMode == RingerModeStatus.vibrate) {
+      log("Phone is already in \$currentMode mode. Skipping muting and flag to NOT unmute later.");
+      await prefs.setBool('was_muted_by_app', false);
+      
+      // Log to DB
+      final logsDao = SilentLogsDao();
+      logsDao.logSilentEvent(
+        date: DateTime.now(),
+        prayerName: 'Scheduled Event',
+        actualStart: DateTime.now(),
+        triggerType: 'skipped_mute',
+        status: 'success',
+      );
+      return;
+    }
+
     await silenceService.setSilentMode(vibrate: vibrateInstead);
+    // Flag so we know to unmute it later
+    await prefs.setBool('was_muted_by_app', true);
+    
     log(
       vibrateInstead
           ? "Successfully set device to vibrate."
@@ -50,6 +74,26 @@ Future<void> unmuteDeviceCallback() async {
     final prefs = await SharedPreferences.getInstance();
     final appPrefs = AppPreferences(prefs);
     final restoreSound = appPrefs.getRestoreSound();
+
+    final wasMutedByApp = prefs.getBool('was_muted_by_app') ?? true;
+    
+    if (!wasMutedByApp) {
+      log("Skipping unmute since phone was already silent before prayer.");
+      await prefs.remove('was_muted_by_app'); // Clean up
+      
+      final logsDao = SilentLogsDao();
+      logsDao.logSilentEvent(
+        date: DateTime.now(),
+        prayerName: 'Scheduled Event',
+        actualStart: DateTime.now(),
+        triggerType: 'skipped_unmute',
+        status: 'success',
+      );
+      return;
+    }
+    
+    // Clean up flag 
+    await prefs.remove('was_muted_by_app');
 
     if (restoreSound) {
       final silenceService = SilenceService();

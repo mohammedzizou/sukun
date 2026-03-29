@@ -5,6 +5,17 @@ import 'package:sound_mode/permission_handler.dart';
 import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
 class SilenceService {
+  /// Gets the current ringer mode of the device
+  Future<RingerModeStatus> getCurrentRingerMode() async {
+    if (Platform.isAndroid) {
+      try {
+        return await SoundMode.ringerModeStatus;
+      } catch (e) {
+        return RingerModeStatus.unknown;
+      }
+    }
+    return RingerModeStatus.unknown;
+  }
   /// Checks if the app has permission to manage Do Not Disturb mode.
   /// On iOS, this always returns false currently as we cannot programmatically
   /// change DND/Focus modes without user intervention.

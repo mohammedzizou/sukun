@@ -919,12 +919,27 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 style: const TextStyle(color: AppColors.mint50, fontSize: 12),
               ),
               SizedBox(height: 16),
+              if (Platform.isAndroid)
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: state.isTestScheduled
                       ? null
-                      : () => context.read<HomeCubit>().runSilenceTest(),
+                      : () async {
+                          final started = await context.read<HomeCubit>().runSilenceTest();
+                          if (!started && context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Phone is already silenced. Test skipped.'.tr,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor: const Color(0xFFD4AF37), // AppColors.goldish
+                                duration: const Duration(seconds: 3),
+                              ),
+                            );
+                          }
+                        },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.activeGreen12,
                     foregroundColor: AppColors.activeGreen,
