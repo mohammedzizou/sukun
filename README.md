@@ -65,7 +65,7 @@ The project follows a **Feature-Driven Clean Architecture** to ensure scalabilit
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/mohammedzizou/prayer_silence_time_app.git
+   git clone https://github.com/mohammedzizou/sukun.git
    ```
 2. Install dependencies:
    ```bash
