@@ -14,6 +14,9 @@ import 'package:sukun/features/settings/presentation/widgets/settings_section.da
 import 'package:sukun/features/settings/presentation/widgets/settings_switch_row.dart';
 import 'package:sukun/features/settings/presentation/widgets/profile_header_card.dart';
 import 'package:sukun/features/settings/presentation/widgets/profile_action_row.dart';
+import 'package:sukun/features/settings/presentation/screens/about_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:sukun/features/settings/presentation/cubit/about_cubit.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -210,9 +213,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             color: AppColors.activeGreen,
                             size: 17,
                           ),
-                          title: 'About Salah Silent'.tr,
-                          subtitle: 'Version 1.0.0'.tr,
-                          onTap: () {},
+                          title: 'About Sukun'.tr,
+                          subtitle: 'Learn more about the project'.tr,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BlocProvider(
+                                  create: (context) =>
+                                      getIt<AboutCubit>()..loadAppInfo(),
+                                  child: const AboutScreen(),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                         ProfileActionRow(
                           icon: const Icon(
@@ -222,7 +236,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ),
                           title: 'Privacy Policy'.tr,
                           showDivider: false,
-                          onTap: () {},
+                          onTap: () async {
+                            final uri = Uri.parse(
+                                'https://github.com/mohammedzizou/sukun/blob/main/PRIVACY_POLICY.md');
+                            if (!await launchUrl(uri,
+                                mode: LaunchMode.externalApplication)) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Could not open link'.tr)),
+                              );
+                            }
+                          },
                         ),
                       ],
                     ),
@@ -230,7 +253,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                     Center(
                       child: Text(
-                        'Salah Silent v1.0.0 · Made with ☪ for the Ummah'.tr,
+                        'Sukun v1.0.0 · Made with ☪ for the Ummah'.tr,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0x33A3F7BF),

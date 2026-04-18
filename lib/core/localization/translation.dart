@@ -68,11 +68,11 @@ class MyTranslation extends Translations {
       "University of Islamic Sciences, Karachi":
           "جامعة العلوم الإسلامية، كراتشي",
       "ABOUT": "حول",
-      "About Salah Silent": "حول سكون الصلاة",
+      "About Sukun": "حول سكون",
       "Version 1.0.0": "الإصدار 1.0.0",
       "Privacy Policy": "سياسة الخصوصية",
-      "Salah Silent v1.0.0 · Made with ☪ for the Ummah":
-          "سكون الصلاة v1.0.0 · صُنع بـ ☪ للأمة",
+      "Sukun v1.0.0 · Made with ☪ for the Ummah":
+          "سكون v1.0.0 · صُنع بـ ☪ للأمة",
       "Prayer Adjustments": "تعديلات الصلاة",
       "Current: ": "الحالي: ",
       " min": " دقيقة",
@@ -100,8 +100,8 @@ class MyTranslation extends Translations {
           "دع هاتفك يحترم كل صلاة - تلقائيًا، كل يوم.",
       "Smart automation": "أتمتة ذكية",
       "Set Once, Forget Forever": "اضبطه مرة واحدة، وانساه للأبد",
-      "Salah Silent detects your local prayer times and silences your phone without any effort.":
-          "يكتشف سكون الصلاة أوقات الصلاة المحلية ويصمت هاتفك دون أي جهد.",
+      "Sukun detects your local prayer times and silences your phone without any effort.":
+          "يكتشف سكون الأوقات المحلية للصلاة ويصمت هاتفك دون أي جهد.",
       "Full control": "تحكم كامل",
       "Your Rules, Your Way": "قواعدك، بطريقتك",
       "Choose which prayers to silence, customize duration, and restore sound mode after.":
@@ -127,13 +127,21 @@ class MyTranslation extends Translations {
       "E": "ق",
       "S": "ج",
       "W": "غ",
-      "Salah Silent User": "مستخدم سكون الصلاة",
+      "Sukun User": "مستخدم سكون",
       "Auto-detected via GPS": "مكتشف تلقائياً عبر GPS",
       "Manually set location": "موقع محدد يدوياً",
       "Dark Emerald": "زمردي داكن",
       "Peaceful night mode": "وضع ليلي مريح",
       "Light Mode": "الوضع الفاتح",
       "Bright and airy": "مشرق ومنعش",
+      "Open Source Project": "مشروع مفتوح المصدر",
+      "Project Repository": "مستودع المشروع",
+      "View Licenses": "عرض التراخيص",
+      "MIT License": "رخصة MIT",
+      "Visit GitHub": "زيارة GitHub",
+      "Free and open for the Ummah": "مجاني ومفتوح للأمة",
+      "Sukun is an open-source project dedicated to helping Muslims manage their phone's sound mode during prayer times automatically.":
+          "سكون هو مشروع مفتوح المصدر مخصص لمساعدة المسلمين على إدارة وضع صوت هواتفهم خلال أوقات الصلاة تلقائيًا.",
     },
     "en": {
       "Good Night": "Good Night",
@@ -191,11 +199,11 @@ class MyTranslation extends Translations {
       "University of Islamic Sciences, Karachi":
           "University of Islamic Sciences, Karachi",
       "ABOUT": "ABOUT",
-      "About Salah Silent": "About Salah Silent",
+      "About Sukun": "About Sukun",
       "Version 1.0.0": "Version 1.0.0",
       "Privacy Policy": "Privacy Policy",
-      "Salah Silent v1.0.0 · Made with ☪ for the Ummah":
-          "Salah Silent v1.0.0 · Made with ☪ for the Ummah",
+      "Sukun v1.0.0 · Made with ☪ for the Ummah":
+          "Sukun v1.0.0 · Made with ☪ for the Ummah",
       "Prayer Adjustments": "Prayer Adjustments",
       "Current: ": "Current: ",
       " min": " min",
@@ -223,8 +231,8 @@ class MyTranslation extends Translations {
           "Let your phone honor every prayer — automatically, every day.",
       "Smart automation": "Smart automation",
       "Set Once, Forget Forever": "Set Once, Forget Forever",
-      "Salah Silent detects your local prayer times and silences your phone without any effort.":
-          "Salah Silent detects your local prayer times and silences your phone without any effort.",
+      "Sukun detects your local prayer times and silences your phone without any effort.":
+          "Sukun detects your local prayer times and silences your phone without any effort.",
       "Full control": "Full control",
       "Your Rules, Your Way": "Your Rules, Your Way",
       "Choose which prayers to silence, customize duration, and restore sound mode after.":
@@ -251,13 +259,21 @@ class MyTranslation extends Translations {
       "E": "E",
       "S": "S",
       "W": "W",
-      "Salah Silent User": "Salah Silent User",
+      "Sukun User": "Sukun User",
       "Auto-detected via GPS": "Auto-detected via GPS",
       "Manually set location": "Manually set location",
       "Dark Emerald": "Dark Emerald",
       "Peaceful night mode": "Peaceful night mode",
       "Light Mode": "Light Mode",
       "Bright and airy": "Bright and airy",
+      "Open Source Project": "Open Source Project",
+      "Project Repository": "Project Repository",
+      "View Licenses": "View Licenses",
+      "MIT License": "MIT License",
+      "Visit GitHub": "Visit GitHub",
+      "Free and open for the Ummah": "Free and open for the Ummah",
+      "Sukun is an open-source project dedicated to helping Muslims manage their phone's sound mode during prayer times automatically.":
+          "Sukun is an open-source project dedicated to helping Muslims manage their phone's sound mode during prayer times automatically.",
     },
   };
 }

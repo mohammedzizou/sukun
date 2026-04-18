@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
     final initialLocale = Locale(appPreferences.getLanguageCode());
 
     return GetMaterialApp(
-      title: 'Salah Silent',
+      title: 'Sukun',
       debugShowCheckedModeBanner: false,
       translations: MyTranslation(),
       locale: initialLocale,

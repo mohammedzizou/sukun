@@ -21,6 +21,10 @@ import '../local_data/daos/locations_dao.dart';
 import '../local_data/daos/user_settings_dao.dart';
 import '../networking/base_repository.dart';
 import '../networking/network_info.dart';
+import '../../features/settings/data/repositories/app_info_repository_impl.dart';
+import '../../features/settings/domain/repositories/app_info_repository.dart';
+import '../../features/settings/domain/usecases/get_app_info_use_case.dart';
+import '../../features/settings/presentation/cubit/about_cubit.dart';
 
 GetIt getIt = GetIt.instance;
 
@@ -119,6 +123,18 @@ Future initApp() async {
   );
 
   // --- Settings Feature ---
+  getIt.registerLazySingleton<AppInfoRepository>(
+    () => AppInfoRepositoryImpl(),
+  );
+
+  getIt.registerLazySingleton<GetAppInfoUseCase>(
+    () => GetAppInfoUseCase(getIt<AppInfoRepository>()),
+  );
+
+  getIt.registerFactory(
+    () => AboutCubit(getAppInfoUseCase: getIt<GetAppInfoUseCase>()),
+  );
+
   getIt.registerFactory(
     () => SettingsCubit(
       appPreferences: getIt<AppPreferences>(),

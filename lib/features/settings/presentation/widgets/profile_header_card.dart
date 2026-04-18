@@ -61,7 +61,7 @@ class ProfileHeaderCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Salah Silent User'.tr,
+                  'Sukun User'.tr,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,

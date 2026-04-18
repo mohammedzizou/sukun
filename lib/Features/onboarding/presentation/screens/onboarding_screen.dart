@@ -23,7 +23,7 @@ const List<OnboardingPageData> _pages = [
     tag: 'Smart automation',
     title: 'Set Once, Forget Forever',
     subtitle:
-        'Salah Silent detects your local prayer times and silences your phone without any effort.',
+        'Sukun detects your local prayer times and silences your phone without any effort.',
     iconAsset: AppIcons.bellOff,
   ),
   OnboardingPageData(
