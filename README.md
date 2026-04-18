@@ -24,14 +24,13 @@
 
 ## 📸 Screenshots
 
-| Onboarding | Home Screen | Qibla Compass | Settings |
-|:---:|:---:|:---:|:---:|
-| <img src="assest/images/onboarding.png" width="200" alt="Placeholder" /> | <img src="assest/images/home.png" width="200" alt="Placeholder" /> | <img src="assest/images/qibla.png" width="200" alt="Placeholder" /> | <img src="assest/images/settings.png" width="200" alt="Placeholder" /> |
-
-*(Place your screenshots in `assest/images/` to see them here)*
+| Home Screen | Qibla Compass | Settings |
+|:---:|:---:|:---:|
+|
+  | <img src="assest/images/home.png" width="200" alt="Placeholder" /> | <img src="assest/images/qibla.png" width="200" alt="Placeholder" /> | <img src="assest/images/settings.png" width="200" alt="Placeholder" /> |
+ | <img src="assest/images/home_ar.png" width="200" alt="Placeholder" /> | <img src="assest/images/qibla_ar.png" width="200" alt="Placeholder" /> | <img src="assest/images/settings_ar.png" width="200" alt="Placeholder" /> |
 
 ---
-
 ## 🏗 Architecture
 
 The project follows a **Feature-Driven Clean Architecture** to ensure scalability, testability, and maintainability.
