@@ -2,8 +2,15 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Flutter](https://img.shields.io/badge/Flutter-Framework-blue?logo=flutter)](https://flutter.dev)
+[![Download APK](https://img.shields.io/github/v/release/mohammedzizou/sukun?color=green&label=Download%20APK)](https://github.com/mohammedzizou/sukun/releases/latest)
 
 **Sukun** is a premium, open-source Flutter application designed to help Muslims automatically manage their device's sound mode during prayer times. It ensures that your phone honors every prayer by silencing it when you are in the mosque and restoring your preferences afterward.
+
+---
+
+## 📥 Download
+
+You can find the latest **release APK** on our [Releases Page](https://github.com/mohammedzizou/sukun/releases/latest). Simply download the `app-release.apk` and install it on your Android device.
 
 ---
 
@@ -24,10 +31,15 @@
 
 ## 📸 Screenshots
 
+### English Version
+| Home Screen | Qibla Compass | Settings |
+|:---:|:---:|:---:|
+| <img src="assest/images/home.png" width="200" alt="Home" /> | <img src="assest/images/qibla.png" width="200" alt="Qibla" /> | <img src="assest/images/settings.png" width="200" alt="Settings" /> |
 
-
-   <img src="assest/images/home.png" width="200" alt="Placeholder" /> | <img src="assest/images/qibla.png" width="200" alt="Placeholder" /> | <img src="assest/images/settings.png" width="200" alt="Placeholder" /> 
-  <img src="assest/images/home_ar.png" width="200" alt="Placeholder" /> | <img src="assest/images/qibla_ar.png" width="200" alt="Placeholder" /> | <img src="assest/images/settings_ar.png" width="200" alt="Placeholder" /> 
+### Arabic Version
+| الواجهة الرئيسية | اتجاه القبلة | الإعدادات |
+|:---:|:---:|:---:|
+| <img src="assest/images/home_ar.png" width="200" alt="Home AR" /> | <img src="assest/images/qibla_ar.png" width="200" alt="Qibla AR" /> | <img src="assest/images/settings_ar.png" width="200" alt="Settings AR" /> |
 
 ---
 ## 🏗 Architecture
